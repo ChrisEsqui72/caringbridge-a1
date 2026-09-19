@@ -2,6 +2,7 @@ import type { OnboardingData, PageFor } from "../../../shared/types";
 import { CardSelector } from "../components/CardSelector";
 import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
+import { PageShell } from "../components/PageShell";
 
 interface Props {
     data: OnboardingData;
@@ -48,36 +49,35 @@ export function AudiencePage({
     onNext
 }: Props) {
     return (
-        <>
+        <PageShell>
             <PageHeader
                 eyebrow="Let's get started"
                 title="Who is this page for?"
                 description="This helps us shape the update around your relationship with the patient."
             />
 
-            <CardSelector
-                options={options}
-                value={data.pageFor}
-                onChange={(value) =>
-                    updateData({ pageFor: value })
-                }
-            />
+            <div className="mt-8">
+                <CardSelector
+                    options={options}
+                    value={data.pageFor}
+                    onChange={(value) =>
+                        updateData({ pageFor: value })
+                    }
+                />
+            </div>
 
-            <Button
-                onClick={() =>
-                    onBack()
-                }
-            >
-                Back
-            </Button>
-            
-            <Button
-                onClick={() =>
-                    onNext()
-                }
-            >
-                Next
-            </Button>
-        </>
+            <div className="mt-8 flex items-center justify-between">
+                <Button
+                    variant="secondary"
+                    onClick={onBack}
+                >
+                    ← Back
+                </Button>
+
+                <Button onClick={onNext}>
+                    Continue →
+                </Button>
+            </div>
+        </PageShell>
     );
 }
