@@ -70,21 +70,18 @@ export function CaregiverPage({
                     placeholder="(555) 555-5555"
                 />
             </div>
-            <Button
-                onClick={() =>
-                    onBack()
-                }
-            >
-                Back
-            </Button>
-            
-            <Button
-                onClick={() =>
-                    onNext()
-                }
-            >
-                Next
-            </Button>
+            <div className="mt-8 flex items-center justify-between px-4">
+                <Button
+                    variant="secondary"
+                    onClick={onBack}
+                >
+                    ← Back
+                </Button>
+
+                <Button onClick={onNext}>
+                    Continue →
+                </Button>
+            </div>
         </>
     );
 }

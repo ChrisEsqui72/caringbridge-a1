@@ -60,21 +60,18 @@ export function ReviewPage({
                 </div>
             </section>
 
-            <Button
-                    onClick={() =>
-                        onBack()
-                    }
-                >
-                    Back
-                </Button>
-                
+            <div className="mt-8 flex items-center justify-between px-4">
                 <Button
-                    onClick={() =>
-                        onNext()
-                    }
+                    variant="secondary"
+                    onClick={onBack}
                 >
-                    Next
+                    ← Back
                 </Button>
+
+                <Button onClick={onNext}>
+                    Continue →
+                </Button>
+            </div>
         </>
     );
 }

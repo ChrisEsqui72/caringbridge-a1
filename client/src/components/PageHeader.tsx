@@ -10,7 +10,7 @@ export function PageHeader({
     description
 }: PageHeaderProps) {
     return (
-        <header>
+        <header className="text-center">
             {eyebrow && (
                 <p className="text-sm font-semibold tracking-wide text-[var(--cb-green-600)]">
                     {eyebrow}
@@ -22,9 +22,11 @@ export function PageHeader({
             </h1>
 
             {description && (
-                <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--cb-text-muted)]">
-                    {description}
-                </p>
+                <div className="mt-3 flex justify-center">
+                    <p className="max-w-2xl text-base leading-7 text-[var(--cb-text-muted)]">
+                        {description}
+                    </p>
+                </div>
             )}
         </header>
     );
