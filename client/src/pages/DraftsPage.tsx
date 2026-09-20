@@ -152,6 +152,13 @@ export function DraftsPage({
                 >
                     ← Back
                 </Button>
+
+                <Button
+                    variant="ghost"
+                    onClick={onNext}
+                >
+                    Continue →
+                </Button>
             </div>
         </>
     );
