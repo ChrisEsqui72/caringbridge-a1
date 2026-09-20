@@ -17,6 +17,7 @@ interface Props {
     setDrafts: (drafts: Draft[]) => void;
     onSelect: (draft: Draft) => void;
     onBack: () => void;
+    onNext: () => void;
 }
 
 export function DraftsPage({
@@ -25,6 +26,7 @@ export function DraftsPage({
     setDrafts,
     onSelect,
     onBack,
+    onNext
 }: Props) {
     const [loadingId, setLoadingId] =
         useState<string | null>(null);
