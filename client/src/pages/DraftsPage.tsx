@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
     Draft,
     OnboardingData
@@ -10,6 +10,7 @@ import {
     generateDrafts,
     regenerateDraft
 } from "../lib/api";
+import { generateFakeDrafts } from "../lib/fakeDrafts";
 
 interface Props {
     data: OnboardingData;
@@ -33,6 +34,12 @@ export function DraftsPage({
 
     const [loadingAll, setLoadingAll] =
         useState(false);
+
+    useEffect(() => {
+        if (drafts.length === 0) {
+            setDrafts(generateFakeDrafts(data));
+        }
+    }, [drafts.length, setDrafts]);
 
     async function handleRegenerate(
         draft: Draft
@@ -79,7 +86,7 @@ export function DraftsPage({
                 description="Choose the version that feels most like you, or try another."
             />
 
-            <div className="draft-grid">
+            <div className="mx-auto mt-8 w-full max-w-3xl space-y-5">
                 {drafts.map((draft) => (
                     <DraftCard
                         key={draft.id}
@@ -99,31 +106,26 @@ export function DraftsPage({
                 ))}
             </div>
 
-            <div className="regenerate-all">
-                <button
+            <div className="mt-6 flex justify-center">
+                <Button
+                    variant="secondary"
                     onClick={handleRegenerateAll}
                     disabled={loadingAll}
                 >
                     {loadingAll
                         ? "Creating new drafts..."
                         : "Try three new versions"}
-                </button>
+                </Button>
             </div>
-            <Button
-                onClick={() =>
-                    onBack()
-                }
-            >
-                Back
-            </Button>
-            
-            <Button
-                onClick={() =>
-                    onNext()
-                }
-            >
-                Next
-            </Button>
+
+            <div className="mx-auto mt-8 flex w-full max-w-3xl items-center justify-between px-2 sm:px-4">
+                <Button
+                    variant="secondary"
+                    onClick={onBack}
+                >
+                    ← Back
+                </Button>
+            </div>
         </>
     );
 }

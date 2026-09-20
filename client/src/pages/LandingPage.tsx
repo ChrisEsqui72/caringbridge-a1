@@ -14,7 +14,7 @@ export function LandingPage({ onNext }: LandingPageProps) {
               Care Update Assistant
             </p>
 
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-red-500 sm:text-5xl">
               Share what’s happening. We’ll help you put it into words.
             </h1>
 
@@ -25,13 +25,11 @@ export function LandingPage({ onNext }: LandingPageProps) {
               choose from.
             </p>
 
-            <Button
-                onClick={() =>
-                    onNext()
-                }
-            >
-                Get Started
-            </Button>
+            <div className="mt-8 flex items-center justify-center px-4">
+                <Button onClick={onNext}>
+                    Get started →
+                </Button>
+            </div>
 
             <p className="mt-5 text-sm text-slate-500">
               You’ll review the information before anything is turned into a

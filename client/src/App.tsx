@@ -13,6 +13,8 @@ import { EditorPage } from "./pages/EditorPage";
 import type { OnboardingData } from "../../shared/types";
 import type { Draft } from "../../shared/types";
 
+import "./styles/theme.css";
+
 type Page =
   | "landing"
   | "audience"

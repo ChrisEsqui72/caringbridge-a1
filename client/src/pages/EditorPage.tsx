@@ -57,21 +57,18 @@ export function EditorPage({
                     Save draft
                 </Button>
 
+                <div className="mt-8 flex items-center justify-between px-4">
                 <Button
-                    onClick={() =>
-                        onBack()
-                    }
+                    variant="secondary"
+                    onClick={onBack}
                 >
-                    Back
+                    ← Back
                 </Button>
 
-                <Button
-                    onClick={() =>
-                        onFinish()
-                    }
-                >
+                <Button onClick={onFinish}>
                     Finish
                 </Button>
+            </div>
             </div>
         </>
     );

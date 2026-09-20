@@ -21,36 +21,60 @@ export function CarePage({
     return (
         <>
             <PageHeader
-                title="What's next?"
+                eyebrow="What's next"
+                title="What happens next?"
                 description="Tell us about upcoming treatment, appointments, or other important steps."
             />
 
-            <TextArea
-                label="What happens next?"
-                value={data.care.nextSteps}
-                onChange={(value) =>
-                    updateCare({
-                        nextSteps: value
-                    })
-                }
-                placeholder="Chemotherapy will begin next month..."
-                rows={7}
-            />
-            <Button
-                onClick={() =>
-                    onBack()
-                }
-            >
-                Back
-            </Button>
-            
-            <Button
-                onClick={() =>
-                    onNext()
-                }
-            >
-                Next
-            </Button>
+            <div className="mx-auto mt-8 w-full max-w-3xl">
+                <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] shadow-sm">
+                    {/* Section header */}
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-green-50)] px-6 py-5 sm:px-8">
+                        <h2 className="text-base font-semibold text-[var(--cb-text)]">
+                            Upcoming care
+                        </h2>
+
+                        <p className="mt-1 text-sm leading-6 text-[var(--cb-text-muted)]">
+                            Share what the patient and their loved ones
+                            can expect next.
+                        </p>
+                    </div>
+
+                    {/* Form */}
+                    <div className="px-6 py-7 sm:px-8 sm:py-8">
+                        <TextArea
+                            label="What happens next?"
+                            value={data.care.nextSteps}
+                            onChange={(value) =>
+                                updateCare({
+                                    nextSteps: value
+                                })
+                            }
+                            placeholder="For example: Chemotherapy will begin next month, followed by weekly appointments with the care team..."
+                            rows={7}
+                        />
+
+                        <p className="mt-2 text-xs leading-5 text-[var(--cb-text-muted)]">
+                            Treatment, appointments, milestones, or
+                            anything else people should know about.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="mt-8 flex items-center justify-between px-2 sm:px-4">
+                    <Button
+                        variant="secondary"
+                        onClick={onBack}
+                    >
+                        ← Back
+                    </Button>
+
+                    <Button onClick={onNext}>
+                        Continue →
+                    </Button>
+                </div>
+            </div>
         </>
     );
 }
