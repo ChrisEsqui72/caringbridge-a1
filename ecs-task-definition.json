@@ -1,0 +1,44 @@
+{
+    "family": "caringbridge-api",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::278175638469:role/CaringBridgeEcsExecutionRole",
+    "taskRoleArn": "arn:aws:iam::278175638469:role/CaringBridgeEcsTaskRole",
+    "containerDefinitions": [
+        {
+            "name": "Main",
+            "image": "278175638469.dkr.ecr.us-east-1.amazonaws.com/caringbridge-api:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "name": "http",
+                    "containerPort": 3001,
+                    "hostPort": 3001,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "AWS_REGION",
+                    "value": "us-east-1"
+                },
+                {
+                    "name": "BEDROCK_MODEL_ID",
+                    "value": "amazon.nova-lite-v1:0"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/caringbridge",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ]
+}
