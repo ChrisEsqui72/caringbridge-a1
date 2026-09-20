@@ -10,7 +10,6 @@ import {
     generateDrafts,
     regenerateDraft
 } from "../lib/api";
-import { generateFakeDrafts } from "../lib/fakeDrafts";
 
 interface Props {
     data: OnboardingData;
@@ -18,7 +17,6 @@ interface Props {
     setDrafts: (drafts: Draft[]) => void;
     onSelect: (draft: Draft) => void;
     onBack: () => void;
-    onNext: () => void;
 }
 
 export function DraftsPage({
@@ -27,7 +25,6 @@ export function DraftsPage({
     setDrafts,
     onSelect,
     onBack,
-    onNext
 }: Props) {
     const [loadingId, setLoadingId] =
         useState<string | null>(null);
@@ -35,11 +32,26 @@ export function DraftsPage({
     const [loadingAll, setLoadingAll] =
         useState(false);
 
+    const [loadingInitial, setLoadingInitial] =
+        useState(drafts.length === 0);
+
     useEffect(() => {
         if (drafts.length === 0) {
-            setDrafts(generateFakeDrafts(data));
+            setLoadingInitial(true);
+
+            generateDrafts(data)
+                .then(setDrafts)
+                .catch((error) => {
+                    console.error(
+                        "Failed to generate drafts:",
+                        error
+                    );
+                })
+                .finally(() => {
+                    setLoadingInitial(false);
+                });
         }
-    }, [drafts.length, setDrafts]);
+    }, [data, drafts.length, setDrafts]);
 
     async function handleRegenerate(
         draft: Draft
@@ -86,31 +98,44 @@ export function DraftsPage({
                 description="Choose the version that feels most like you, or try another."
             />
 
-            <div className="mx-auto mt-8 w-full max-w-3xl space-y-5">
-                {drafts.map((draft) => (
-                    <DraftCard
-                        key={draft.id}
-                        draft={draft}
-                        loading={
-                            loadingId === draft.id
-                        }
-                        onSelect={() =>
-                            onSelect(draft)
-                        }
-                        onRegenerate={() =>
-                            handleRegenerate(
-                                draft
-                            )
-                        }
-                    />
-                ))}
-            </div>
+            {loadingInitial ? (
+                <div className="py-12 text-center">
+                    <p className="text-lg font-medium">
+                        Creating your drafts...
+                    </p>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                        We're turning your information into a few
+                        different ways to tell your story.
+                    </p>
+                </div>
+            ) : (
+                <div className="mx-auto mt-8 w-full max-w-3xl space-y-5">
+                    {drafts.map((draft) => (
+                        <DraftCard
+                            key={draft.id}
+                            draft={draft}
+                            loading={
+                                loadingId === draft.id
+                            }
+                            onSelect={() =>
+                                onSelect(draft)
+                            }
+                            onRegenerate={() =>
+                                handleRegenerate(draft)
+                            }
+                        />
+                    ))}
+                </div>
+            )}
 
             <div className="mt-6 flex justify-center">
                 <Button
                     variant="secondary"
                     onClick={handleRegenerateAll}
-                    disabled={loadingAll}
+                    disabled={
+                        loadingAll || loadingInitial
+                    }
                 >
                     {loadingAll
                         ? "Creating new drafts..."
