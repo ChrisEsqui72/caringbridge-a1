@@ -109,16 +109,26 @@ coveredTopics should be a short list of the major pieces of information included
  * explicit choices.
  */
 function describeSupport(data: OnboardingData): string {
+    // The request body is not schema-validated yet, so tolerate a missing
+    // or partial support object rather than 500ing on it.
+    const support: Partial<OnboardingData["support"]> =
+        data.support ?? {};
+
     const selected = (
         Object.keys(SUPPORT_LABELS) as (keyof typeof SUPPORT_LABELS)[]
-    ).filter((key) => data.support[key]);
+    ).filter((key) => support[key] === true);
 
     const lines = selected.map(
         (key) => `- ${SUPPORT_LABELS[key]}`
     );
 
-    if (data.support.other.trim()) {
-        lines.push(`- ${data.support.other.trim()}`);
+    const other =
+        typeof support.other === "string"
+            ? support.other.trim()
+            : "";
+
+    if (other) {
+        lines.push(`- ${other}`);
     }
 
     if (lines.length === 0) {

@@ -161,13 +161,26 @@ function App() {
   const saveDraft = (updatedDraft: Draft) => {
     setSelectedDraft(updatedDraft);
 
-    setDrafts((currentDrafts) =>
-      currentDrafts.some((draft) => draft.id === updatedDraft.id)
+    // An untouched "Draft my own post" is not worth a card. Without this,
+    // opening it and backing out leaves a blank card, and they stack.
+    const isEmptyOwnDraft =
+      updatedDraft.tone === "custom" &&
+      !updatedDraft.title.trim() &&
+      !updatedDraft.body.trim();
+
+    setDrafts((currentDrafts) => {
+      if (isEmptyOwnDraft) {
+        return currentDrafts.filter(
+          (draft) => draft.id !== updatedDraft.id
+        );
+      }
+
+      return currentDrafts.some((draft) => draft.id === updatedDraft.id)
         ? currentDrafts.map((draft) =>
             draft.id === updatedDraft.id ? updatedDraft : draft
           )
-        : [...currentDrafts, updatedDraft]
-    );
+        : [...currentDrafts, updatedDraft];
+    });
   };
 
   // Starting over should not inherit the previous run's answers or drafts.
