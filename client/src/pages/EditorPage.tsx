@@ -8,8 +8,8 @@ import { Button } from "../components/Button";
 interface Props {
     draft: Draft;
     onSave: (draft: Draft) => void;
-    onBack: () => void;
-    onFinish: () => void;
+    onBack: (draft: Draft) => void;
+    onFinish: (draft: Draft) => void;
 }
 
 export function EditorPage({
@@ -24,6 +24,16 @@ export function EditorPage({
     const [body, setBody] =
         useState(draft.body);
 
+    const [saved, setSaved] = useState(false);
+
+    // Back and Finish commit the current text too, so leaving the editor
+    // never silently discards what the user typed.
+    const current = (): Draft => ({
+        ...draft,
+        title,
+        body
+    });
+
     return (
         <>
             <PageHeader
@@ -31,44 +41,59 @@ export function EditorPage({
                 description="Review and edit your update before you're finished."
             />
 
-            <div className="editor">
+            <div className="cb-editor">
                 <TextInput
                     label="Title"
                     value={title}
-                    onChange={setTitle}
+                    onChange={(value) => {
+                        setTitle(value);
+                        setSaved(false);
+                    }}
                 />
 
                 <TextArea
                     label="Your update"
                     value={body}
-                    onChange={setBody}
+                    onChange={(value) => {
+                        setBody(value);
+                        setSaved(false);
+                    }}
                     rows={16}
                 />
 
-                <Button
-                    onClick={() =>
-                        onSave({
-                            ...draft,
-                            title,
-                            body
-                        })
-                    }
-                >
-                    Save draft
-                </Button>
+                <div className="cb-editor__save">
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            onSave(current());
+                            setSaved(true);
+                        }}
+                    >
+                        Save draft
+                    </Button>
 
-                <div className="mt-8 flex items-center justify-between px-4">
-                <Button
-                    variant="secondary"
-                    onClick={onBack}
-                >
-                    ← Back
-                </Button>
+                    {saved && (
+                        <span
+                            className="cb-editor__saved"
+                            role="status"
+                        >
+                            Saved
+                        </span>
+                    )}
+                </div>
 
-                <Button onClick={onFinish}>
-                    Finish
-                </Button>
-            </div>
+                <div className="cb-editor__nav">
+                    <Button
+                        variant="secondary"
+                        onClick={() => onBack(current())}
+                    >
+                        ← Back
+                    </Button>
+
+                    <Button onClick={() => onFinish(current())}>
+                        Finish
+                    </Button>
+                </div>
             </div>
         </>
     );

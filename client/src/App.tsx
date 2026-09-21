@@ -10,6 +10,7 @@ import { ReviewPage } from "./pages/ReviewPage";
 import { DraftsPage } from "./pages/DraftsPage";
 import { EditorPage } from "./pages/EditorPage";
 import { PageShell } from "./components/PageShell";
+import { createId } from "./lib/id";
 
 import type { OnboardingData } from "../../shared/types";
 import type { Draft } from "../../shared/types";
@@ -26,6 +27,17 @@ type Page =
   | "review"
   | "drafts"
   | "editor";
+
+// Pages that count toward the progress indicator. Landing, drafts and the
+// editor sit outside the numbered flow.
+const onboardingSteps: Page[] = [
+  "audience",
+  "patient",
+  "care",
+  "caregiver",
+  "support",
+  "review",
+];
 
 const initialData: OnboardingData = {
   pageFor: null,
@@ -136,7 +148,7 @@ function App() {
   // update instead of starting from one of the generated options.
   const startOwnDraft = () => {
     setSelectedDraft({
-      id: crypto.randomUUID(),
+      id: createId(),
       tone: "custom",
       title: "",
       body: "",
@@ -144,6 +156,26 @@ function App() {
     });
 
     navigate("editor");
+  };
+
+  const saveDraft = (updatedDraft: Draft) => {
+    setSelectedDraft(updatedDraft);
+
+    setDrafts((currentDrafts) =>
+      currentDrafts.some((draft) => draft.id === updatedDraft.id)
+        ? currentDrafts.map((draft) =>
+            draft.id === updatedDraft.id ? updatedDraft : draft
+          )
+        : [...currentDrafts, updatedDraft]
+    );
+  };
+
+  // Starting over should not inherit the previous run's answers or drafts.
+  const startOver = () => {
+    setData(initialData);
+    setDrafts([]);
+    setSelectedDraft(null);
+    navigate("landing");
   };
 
   const renderDraftsPage = () => (
@@ -239,19 +271,15 @@ function App() {
       return (
         <EditorPage
           draft={selectedDraft}
-          onSave={(updatedDraft) => {
-            setSelectedDraft(updatedDraft);
-
-            setDrafts((currentDrafts) =>
-              currentDrafts.some((draft) => draft.id === updatedDraft.id)
-                ? currentDrafts.map((draft) =>
-                    draft.id === updatedDraft.id ? updatedDraft : draft
-                  )
-                : [...currentDrafts, updatedDraft]
-            );
+          onSave={saveDraft}
+          onBack={(updatedDraft) => {
+            saveDraft(updatedDraft);
+            navigate("drafts");
           }}
-          onBack={() => navigate("drafts")}
-          onFinish={() => navigate("landing")}
+          onFinish={(updatedDraft) => {
+            saveDraft(updatedDraft);
+            startOver();
+          }}
         />
       );
     default:
@@ -259,7 +287,16 @@ function App() {
   }
   };
 
-  return <PageShell>{renderPage()}</PageShell>;
+  const step = onboardingSteps.indexOf(page);
+
+  return (
+    <PageShell
+      step={step >= 0 ? step + 1 : undefined}
+      totalSteps={step >= 0 ? onboardingSteps.length : undefined}
+    >
+      {renderPage()}
+    </PageShell>
+  );
 }
 
 export default App;

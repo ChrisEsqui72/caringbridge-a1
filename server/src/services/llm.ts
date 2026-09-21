@@ -8,6 +8,8 @@ import type {
     OnboardingData
 } from "../../../shared/types/index.js";
 
+import { SUPPORT_LABELS } from "../../../shared/types/index.js";
+
 const client = new BedrockRuntimeClient({
     region: 
         process.env.AWS_REGION ?? "us-east-1"
@@ -100,6 +102,34 @@ The JSON must contain exactly three drafts in this format:
 coveredTopics should be a short list of the major pieces of information included in that particular draft.
 `;
 
+/**
+ * Spells out the selected support options by name. Handing the model a raw
+ * booleans blob made it drop options when many were selected, and let
+ * support needs mentioned in earlier free-text fields crowd out the
+ * explicit choices.
+ */
+function describeSupport(data: OnboardingData): string {
+    const selected = (
+        Object.keys(SUPPORT_LABELS) as (keyof typeof SUPPORT_LABELS)[]
+    ).filter((key) => data.support[key]);
+
+    const lines = selected.map(
+        (key) => `- ${SUPPORT_LABELS[key]}`
+    );
+
+    if (data.support.other.trim()) {
+        lines.push(`- ${data.support.other.trim()}`);
+    }
+
+    if (lines.length === 0) {
+        return "No specific support options were selected. Do not mention or imply any need for support.";
+    }
+
+    return `The user selected ${lines.length} support option(s). EVERY one of these must appear in the community-focused draft, and none may be omitted or merged away:
+
+${lines.join("\n")}`;
+}
+
 export async function generateDrafts(
     data: OnboardingData
 ): Promise<Draft[]> {
@@ -107,6 +137,21 @@ export async function generateDrafts(
 Here is the complete information provided during onboarding:
 
 ${JSON.stringify(data, null, 2)}
+
+SUPPORT OPTIONS (authoritative)
+
+${describeSupport(data)}
+
+This list is the only source of truth for support needs. If an earlier
+free-text field happens to mention a kind of help, that does not add it to
+this list, and it must not become the focus of the update.
+
+LENGTH
+
+Scale each draft to how much information was actually provided. Sparse
+input should produce a short update of a few sentences; detailed input
+should produce a correspondingly fuller one. Do not pad a thin update to
+look substantial, and do not compress a detailed one into a summary.
 
 Create the three requested drafts using this information.
 `;
@@ -132,7 +177,7 @@ Create the three requested drafts using this information.
         ],
 
         inferenceConfig: {
-            maxTokens: 2000,
+            maxTokens: 4000,
             temperature: 0.7
         }
     });

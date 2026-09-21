@@ -28,6 +28,10 @@ export function DraftCard({
     onSelect,
     onRegenerate
 }: Props) {
+    // The user's own words are not a generated draft: regenerating would
+    // send them to the model and overwrite them.
+    const isOwnDraft = draft.tone === "custom";
+
     return (
         <article className="cb-draft">
             <div className="cb-draft__header">
@@ -49,38 +53,44 @@ export function DraftCard({
                     {draft.body}
                 </p>
 
-                <div className="cb-draft__topics">
-                    <p className="cb-draft__topics-label">
-                        This draft covers
-                    </p>
+                {draft.coveredTopics.length > 0 && (
+                    <div className="cb-draft__topics">
+                        <p className="cb-draft__topics-label">
+                            This draft covers
+                        </p>
 
-                    <div className="cb-draft__topic-list">
-                        {draft.coveredTopics.map((topic) => (
-                            <span
-                                key={topic}
-                                className="cb-draft__topic"
-                            >
-                                <span aria-hidden="true">✓</span>
-                                {topic}
-                            </span>
-                        ))}
+                        <div className="cb-draft__topic-list">
+                            {draft.coveredTopics.map((topic) => (
+                                <span
+                                    key={topic}
+                                    className="cb-draft__topic"
+                                >
+                                    <span aria-hidden="true">✓</span>
+                                    {topic}
+                                </span>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div className="cb-draft__actions">
                     <Button onClick={onSelect}>
-                        Use this draft →
+                        {isOwnDraft
+                            ? "Keep editing →"
+                            : "Use this draft →"}
                     </Button>
 
-                    <Button
-                        variant="secondary"
-                        onClick={onRegenerate}
-                        disabled={loading}
-                    >
-                        {loading
-                            ? "Creating..."
-                            : "Try another version"}
-                    </Button>
+                    {!isOwnDraft && (
+                        <Button
+                            variant="secondary"
+                            onClick={onRegenerate}
+                            disabled={loading}
+                        >
+                            {loading
+                                ? "Creating..."
+                                : "Try another version"}
+                        </Button>
+                    )}
                 </div>
             </div>
         </article>

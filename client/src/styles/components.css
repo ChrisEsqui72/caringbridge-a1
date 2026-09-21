@@ -50,8 +50,13 @@
   box-shadow: var(--cb-shadow-sm);
 }
 
+/*
+ * CaringBridge's own theme lightens on hover (--button-bg-hover: #b06486),
+ * but white on that is 4.19:1 — below WCAG AA for this 14px/600 label.
+ * Darkening instead keeps the brand hue and lands at 8.2:1.
+ */
 .cb-btn--primary:hover:not(:disabled) {
-  background: var(--cb-brand-400);
+  background: var(--cb-brand-800);
   box-shadow: var(--cb-shadow-md);
 }
 
@@ -482,6 +487,12 @@
 
 /* -------------------------------------------------------------- Progress bar */
 
+.cb-progress {
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto 2rem;
+}
+
 .cb-progress__meta {
   display: flex;
   align-items: center;
@@ -567,13 +578,6 @@ textarea.cb-field__control {
 
 /* ------------------------------------------------------------ Landing card */
 
-.cb-landing {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .cb-landing__card {
   padding: 2rem;
   border: 1px solid var(--cb-border);
@@ -595,7 +599,7 @@ textarea.cb-field__control {
 }
 
 .cb-landing__note {
-  margin: 1.25rem 0 0;
+  margin: 1.75rem 0 0;
   text-align: center;
   font-size: 0.875rem;
   color: var(--cb-text-muted);
@@ -636,4 +640,43 @@ textarea.cb-field__control {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+/* -------------------------------------------------------------------- Editor */
+
+.cb-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 48rem;
+  margin: 2.5rem auto 0;
+  padding: 2rem;
+  border: 1px solid var(--cb-border);
+  border-radius: var(--cb-radius-xl);
+  background: var(--cb-surface);
+  box-shadow: var(--cb-shadow-md);
+}
+
+.cb-editor__save {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cb-editor__saved {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cb-brand-500);
+}
+
+.cb-editor__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cb-border);
+}
+
+.cb-shell__progress {
+  margin-top: 3rem;
 }

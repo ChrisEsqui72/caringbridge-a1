@@ -86,7 +86,12 @@ export function DraftsPage({
             const updated =
                 await generateDrafts(data);
 
-            setDrafts(updated);
+            // Anything the user wrote themselves is not ours to replace.
+            const ownDrafts = drafts.filter(
+                (draft) => draft.tone === "custom"
+            );
+
+            setDrafts([...updated, ...ownDrafts]);
         } finally {
             setLoadingAll(false);
         }
