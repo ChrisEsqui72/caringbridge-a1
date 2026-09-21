@@ -16,11 +16,11 @@ export function TextArea({
     required
 }: TextAreaProps) {
     return (
-        <label className="block w-full">
-            <span className="mb-2 block text-sm font-semibold text-[var(--cb-text)]">
+        <label className="cb-field">
+            <span className="cb-field__label">
                 {label}
                 {required && (
-                    <span className="ml-1 text-[var(--cb-green-600)]">
+                    <span className="cb-field__required">
                         *
                     </span>
                 )}
@@ -34,7 +34,7 @@ export function TextArea({
                 placeholder={placeholder}
                 rows={rows}
                 required={required}
-                className="w-full resize-y rounded-xl border border-[var(--cb-border)] bg-[var(--cb-bg)] px-4 py-3 text-[var(--cb-text)] shadow-sm outline-none transition placeholder:text-[var(--cb-text-muted)] focus:border-[var(--cb-green-600)] focus:ring-4 focus:ring-[var(--cb-green-100)]"
+                className="cb-field__control"
             />
         </label>
     );

@@ -9,6 +9,8 @@ import { SupportPage } from "./pages/SupportPage";
 import { ReviewPage } from "./pages/ReviewPage";
 import { DraftsPage } from "./pages/DraftsPage";
 import { EditorPage } from "./pages/EditorPage";
+import { PageShell } from "./components/PageShell";
+import { createId } from "./lib/id";
 
 import type { OnboardingData } from "../../shared/types";
 import type { Draft } from "../../shared/types";
@@ -25,6 +27,17 @@ type Page =
   | "review"
   | "drafts"
   | "editor";
+
+// Pages that count toward the progress indicator. Landing, drafts and the
+// editor sit outside the numbered flow.
+const onboardingSteps: Page[] = [
+  "audience",
+  "patient",
+  "care",
+  "caregiver",
+  "support",
+  "review",
+];
 
 const initialData: OnboardingData = {
   pageFor: null,
@@ -131,6 +144,68 @@ function App() {
     setPage(nextPage);
   };
 
+  // Opens the editor on an empty draft so the user can write their own
+  // update instead of starting from one of the generated options.
+  const startOwnDraft = () => {
+    setSelectedDraft({
+      id: createId(),
+      tone: "custom",
+      title: "",
+      body: "",
+      coveredTopics: [],
+    });
+
+    navigate("editor");
+  };
+
+  const saveDraft = (updatedDraft: Draft) => {
+    setSelectedDraft(updatedDraft);
+
+    // An untouched "Draft my own post" is not worth a card. Without this,
+    // opening it and backing out leaves a blank card, and they stack.
+    const isEmptyOwnDraft =
+      updatedDraft.tone === "custom" &&
+      !updatedDraft.title.trim() &&
+      !updatedDraft.body.trim();
+
+    setDrafts((currentDrafts) => {
+      if (isEmptyOwnDraft) {
+        return currentDrafts.filter(
+          (draft) => draft.id !== updatedDraft.id
+        );
+      }
+
+      return currentDrafts.some((draft) => draft.id === updatedDraft.id)
+        ? currentDrafts.map((draft) =>
+            draft.id === updatedDraft.id ? updatedDraft : draft
+          )
+        : [...currentDrafts, updatedDraft];
+    });
+  };
+
+  // Starting over should not inherit the previous run's answers or drafts.
+  const startOver = () => {
+    setData(initialData);
+    setDrafts([]);
+    setSelectedDraft(null);
+    navigate("landing");
+  };
+
+  const renderDraftsPage = () => (
+    <DraftsPage
+      data={data}
+      drafts={drafts}
+      setDrafts={setDrafts}
+      onSelect={(draft) => {
+        setSelectedDraft(draft);
+        navigate("editor");
+      }}
+      onBack={() => navigate("review")}
+      onDraftOwn={startOwnDraft}
+    />
+  );
+
+  const renderPage = () => {
   switch (page) {
     case "landing":
       return (
@@ -199,56 +274,42 @@ function App() {
       );
 
     case "drafts":
-      return (
-        <DraftsPage
-          data={data}
-          drafts={drafts}
-          setDrafts={setDrafts}
-          onSelect={(draft) => {
-            setSelectedDraft(draft);
-            navigate("editor");
-          }}
-          onBack={() => navigate("review")}
-          onNext={() => navigate("editor")}
-        />
-      );
+      return renderDraftsPage();
 
     case "editor":
       if (!selectedDraft) {
-        return (
-          <DraftsPage
-            data={data}
-            drafts={drafts}
-            setDrafts={setDrafts}
-            onSelect={(draft) => {
-              setSelectedDraft(draft);
-              navigate("editor");
-            }}
-            onBack={() => navigate("review")}
-            onNext={() => navigate("editor")}
-          />
-        );
+        return renderDraftsPage();
       }
 
       return (
         <EditorPage
           draft={selectedDraft}
-          onSave={(updatedDraft) => {
-            setSelectedDraft(updatedDraft);
-
-            setDrafts((currentDrafts) =>
-              currentDrafts.map((draft) =>
-                draft.id === updatedDraft.id ? updatedDraft : draft
-              )
-            );
+          onSave={saveDraft}
+          onBack={(updatedDraft) => {
+            saveDraft(updatedDraft);
+            navigate("drafts");
           }}
-          onBack={() => navigate("drafts")}
-          onFinish={() => navigate("landing")}
+          onFinish={(updatedDraft) => {
+            saveDraft(updatedDraft);
+            startOver();
+          }}
         />
       );
     default:
       return null;
   }
+  };
+
+  const step = onboardingSteps.indexOf(page);
+
+  return (
+    <PageShell
+      step={step >= 0 ? step + 1 : undefined}
+      totalSteps={step >= 0 ? onboardingSteps.length : undefined}
+    >
+      {renderPage()}
+    </PageShell>
+  );
 }
 
 export default App;

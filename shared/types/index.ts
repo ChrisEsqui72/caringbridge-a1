@@ -56,7 +56,8 @@ export interface OnboardingData {
 export type DraftTone =
     | "warm-personal"
     | "clear-informative"
-    | "community-focused";
+    | "community-focused"
+    | "custom";
 
 export interface Draft {
     id: string;
@@ -65,3 +66,23 @@ export interface Draft {
     body: string;
     coveredTopics: string[];
 }
+/**
+ * Plain-language names for the support options. Shared so the review
+ * screen and the model prompt describe them the same way.
+ */
+export const SUPPORT_LABELS: Record<
+    keyof Omit<SupportNeeds, "other">,
+    string
+> = {
+    meals: "Meals",
+    rides: "Rides",
+    childcare: "Childcare",
+    petCare: "Pet care",
+    householdHelp: "Household help",
+    visits: "Visits",
+    flowers: "Flowers",
+    gifts: "Gifts",
+    thoughtsPrayers: "Thoughts & prayers",
+    fundraising: "Fundraising",
+    phoneCalls: "Phone calls"
+};

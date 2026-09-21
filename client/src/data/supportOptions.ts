@@ -1,67 +1,69 @@
+import { SUPPORT_LABELS } from "../../../shared/types";
+
 export const supportOptions = [
     {
         key: "meals",
-        title: "Meals",
+        title: SUPPORT_LABELS.meals,
         description: "Home-cooked meals or meal delivery",
         icon: "🍲"
     },
     {
         key: "rides",
-        title: "Rides",
+        title: SUPPORT_LABELS.rides,
         description: "Transportation to appointments",
         icon: "🚗"
     },
     {
         key: "childcare",
-        title: "Childcare",
+        title: SUPPORT_LABELS.childcare,
         description: "Help looking after children",
         icon: "👶"
     },
     {
         key: "petCare",
-        title: "Pet care",
+        title: SUPPORT_LABELS.petCare,
         description: "Walking, feeding, or watching pets",
         icon: "🐕"
     },
     {
         key: "householdHelp",
-        title: "Household help",
+        title: SUPPORT_LABELS.householdHelp,
         description: "Errands, cleaning, or chores",
         icon: "🏠"
     },
     {
         key: "visits",
-        title: "Visits",
+        title: SUPPORT_LABELS.visits,
         description: "Spending time with the patient",
         icon: "👋"
     },
     {
         key: "flowers",
-        title: "Flowers",
+        title: SUPPORT_LABELS.flowers,
         description: "Flowers or other gestures",
         icon: "💐"
     },
     {
         key: "gifts",
-        title: "Gifts",
+        title: SUPPORT_LABELS.gifts,
         description: "Gifts or care packages",
         icon: "🎁"
     },
     {
         key: "thoughtsPrayers",
-        title: "Thoughts & prayers",
+        title: SUPPORT_LABELS.thoughtsPrayers,
         description: "Messages, encouragement, or prayer",
         icon: "🙏"
     },
     {
         key: "fundraising",
-        title: "Fundraising",
+        title: SUPPORT_LABELS.fundraising,
         description: "Financial support",
         icon: "💵"
     },
     {
         key: "phoneCalls",
-        title: "Phone calls",
+        title: SUPPORT_LABELS.phoneCalls,
         description: "Checking in by phone",
         icon: "📞"
     }

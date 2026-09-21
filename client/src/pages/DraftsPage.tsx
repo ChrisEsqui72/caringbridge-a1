@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState,
+    type Dispatch,
+    type SetStateAction
+} from "react";
 import type {
     Draft,
     OnboardingData
@@ -14,11 +19,26 @@ import {
 interface Props {
     data: OnboardingData;
     drafts: Draft[];
-    setDrafts: (drafts: Draft[]) => void;
+    setDrafts: Dispatch<SetStateAction<Draft[]>>;
     onSelect: (draft: Draft) => void;
     onBack: () => void;
-    onNext: () => void;
+    onDraftOwn: () => void;
 }
+
+const isOwnDraft = (draft: Draft) =>
+    draft.tone === "custom";
+
+/**
+ * Swaps in a fresh set of generated drafts while keeping anything the user
+ * wrote. Applied as a state updater, not against a captured `drafts`,
+ * because generation is slow: by the time it resolves the user may have
+ * added a draft of their own, and a stale snapshot would erase it.
+ */
+const withGenerated =
+    (generated: Draft[]) => (current: Draft[]) => [
+        ...generated,
+        ...current.filter(isOwnDraft)
+    ];
 
 export function DraftsPage({
     data,
@@ -26,7 +46,7 @@ export function DraftsPage({
     setDrafts,
     onSelect,
     onBack,
-    onNext
+    onDraftOwn
 }: Props) {
     const [loadingId, setLoadingId] =
         useState<string | null>(null);
@@ -34,15 +54,23 @@ export function DraftsPage({
     const [loadingAll, setLoadingAll] =
         useState(false);
 
+    // Keyed on generated drafts, not the whole list: a user-written draft
+    // should not stop the three generated ones from loading.
+    const hasGenerated = drafts.some(
+        (draft) => !isOwnDraft(draft)
+    );
+
     const [loadingInitial, setLoadingInitial] =
-        useState(drafts.length === 0);
+        useState(!hasGenerated);
 
     useEffect(() => {
-        if (drafts.length === 0) {
+        if (!hasGenerated) {
             setLoadingInitial(true);
 
             generateDrafts(data)
-                .then(setDrafts)
+                .then((generated) =>
+                    setDrafts(withGenerated(generated))
+                )
                 .catch((error) => {
                     console.error(
                         "Failed to generate drafts:",
@@ -53,7 +81,7 @@ export function DraftsPage({
                     setLoadingInitial(false);
                 });
         }
-    }, [data, drafts.length, setDrafts]);
+    }, [data, hasGenerated, setDrafts]);
 
     async function handleRegenerate(
         draft: Draft
@@ -67,8 +95,8 @@ export function DraftsPage({
                     draft
                 );
 
-            setDrafts(
-                drafts.map((item) =>
+            setDrafts((current) =>
+                current.map((item) =>
                     item.id === draft.id
                         ? updated
                         : item
@@ -86,7 +114,7 @@ export function DraftsPage({
             const updated =
                 await generateDrafts(data);
 
-            setDrafts(updated);
+            setDrafts(withGenerated(updated));
         } finally {
             setLoadingAll(false);
         }
@@ -154,10 +182,10 @@ export function DraftsPage({
                 </Button>
 
                 <Button
-                    variant="ghost"
-                    onClick={onNext}
+                    variant="secondary"
+                    onClick={onDraftOwn}
                 >
-                    Continue →
+                    Draft my own post
                 </Button>
             </div>
         </>
