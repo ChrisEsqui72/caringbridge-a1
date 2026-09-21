@@ -9,6 +9,7 @@ import { SupportPage } from "./pages/SupportPage";
 import { ReviewPage } from "./pages/ReviewPage";
 import { DraftsPage } from "./pages/DraftsPage";
 import { EditorPage } from "./pages/EditorPage";
+import { SharePage } from "./pages/SharePage";
 import { PageShell } from "./components/PageShell";
 import { createId } from "./lib/id";
 
@@ -26,10 +27,11 @@ type Page =
   | "support"
   | "review"
   | "drafts"
-  | "editor";
+  | "editor"
+  | "share";
 
-// Pages that count toward the progress indicator. Landing, drafts and the
-// editor sit outside the numbered flow.
+// Pages that count toward the progress indicator. Landing, drafts, the
+// editor and sharing sit outside the numbered flow.
 const onboardingSteps: Page[] = [
   "audience",
   "patient",
@@ -83,6 +85,7 @@ function App() {
   const [data, setData] = useState<OnboardingData>(initialData);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [selectedDraft, setSelectedDraft] = useState<Draft | null>(null);
+  const [invites, setInvites] = useState<string[]>([]);
 
   const updateData = (updates: Partial<OnboardingData>) => {
     setData((current) => ({
@@ -188,6 +191,7 @@ function App() {
     setData(initialData);
     setDrafts([]);
     setSelectedDraft(null);
+    setInvites([]);
     navigate("landing");
   };
 
@@ -292,8 +296,24 @@ function App() {
           }}
           onFinish={(updatedDraft) => {
             saveDraft(updatedDraft);
-            startOver();
+            navigate("share");
           }}
+        />
+      );
+
+    case "share":
+      if (!selectedDraft) {
+        return renderDraftsPage();
+      }
+
+      return (
+        <SharePage
+          draft={selectedDraft}
+          data={data}
+          invites={invites}
+          setInvites={setInvites}
+          onBack={() => navigate("editor")}
+          onDone={startOver}
         />
       );
     default:
