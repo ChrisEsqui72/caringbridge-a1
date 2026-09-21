@@ -65,6 +65,14 @@ export interface Draft {
     title: string;
     body: string;
     coveredTopics: string[];
+    // Checklist topics the user added in the editor. Client-only; kept on
+    // the draft so they survive leaving and reopening the editor.
+    customTopics?: CustomTopic[];
+}
+
+export interface CustomTopic {
+    label: string;
+    checked: boolean;
 }
 /**
  * Plain-language names for the support options. Shared so the review

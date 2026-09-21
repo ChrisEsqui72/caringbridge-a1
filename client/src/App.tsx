@@ -284,6 +284,7 @@ function App() {
       return (
         <EditorPage
           draft={selectedDraft}
+          data={data}
           onSave={saveDraft}
           onBack={(updatedDraft) => {
             saveDraft(updatedDraft);
