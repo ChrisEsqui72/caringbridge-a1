@@ -2,7 +2,6 @@ import type { OnboardingData, PageFor } from "../../../shared/types";
 import { CardSelector } from "../components/CardSelector";
 import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
-import { PageShell } from "../components/PageShell";
 
 interface Props {
     data: OnboardingData;
@@ -49,7 +48,7 @@ export function AudiencePage({
     onNext
 }: Props) {
     return (
-        <PageShell>
+        <>
             <PageHeader
                 eyebrow="Let's get started"
                 title="Who is this page for?"
@@ -78,6 +77,6 @@ export function AudiencePage({
                     Continue →
                 </Button>
             </div>
-        </PageShell>
+        </>
     );
 }

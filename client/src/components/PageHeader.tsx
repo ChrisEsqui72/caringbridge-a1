@@ -10,23 +10,21 @@ export function PageHeader({
     description
 }: PageHeaderProps) {
     return (
-        <header className="text-center">
+        <header className="cb-page-header">
             {eyebrow && (
-                <p className="text-sm font-semibold tracking-wide text-[var(--cb-green-600)]">
+                <p className="cb-page-header__eyebrow">
                     {eyebrow}
                 </p>
             )}
 
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--cb-text)] sm:text-4xl">
+            <h1 className="cb-page-header__title">
                 {title}
             </h1>
 
             {description && (
-                <div className="mt-3 flex justify-center">
-                    <p className="max-w-2xl text-base leading-7 text-[var(--cb-text-muted)]">
-                        {description}
-                    </p>
-                </div>
+                <p className="cb-page-header__description">
+                    {description}
+                </p>
             )}
         </header>
     );

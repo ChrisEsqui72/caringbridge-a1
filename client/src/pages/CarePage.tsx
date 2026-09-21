@@ -29,7 +29,7 @@ export function CarePage({
             <div className="mx-auto mt-8 w-full max-w-3xl">
                 <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] shadow-sm">
                     {/* Section header */}
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-green-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             Upcoming care
                         </h2>

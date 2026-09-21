@@ -13,39 +13,26 @@ export function ProgressBar({
             : 0;
 
     return (
-        <div className="w-full">
-            <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wide text-[var(--cb-text-muted)]">
+        <div className="cb-progress">
+            <div className="cb-progress__meta">
+                <span className="cb-progress__label">
                     Your progress
                 </span>
 
-                <span className="text-xs font-medium text-[var(--cb-text-muted)]">
+                <span className="cb-progress__count">
                     {current} of {total}
                 </span>
             </div>
 
             <div
-                className="
-                    h-2
-                    w-full
-                    overflow-hidden
-                    rounded-full
-                    bg-[var(--cb-gray-200)]
-                "
+                className="cb-progress__track"
                 role="progressbar"
                 aria-valuenow={current}
                 aria-valuemin={0}
                 aria-valuemax={total}
             >
                 <div
-                    className="
-                        h-full
-                        rounded-full
-                        bg-[var(--cb-green-500)]
-                        transition-[width]
-                        duration-500
-                        ease-out
-                    "
+                    className="cb-progress__fill"
                     style={{
                         width: `${percentage}%`
                     }}

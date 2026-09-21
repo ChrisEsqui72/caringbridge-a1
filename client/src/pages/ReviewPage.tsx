@@ -29,7 +29,7 @@ export function ReviewPage({
             <div className="mx-auto mt-8 w-full max-w-3xl space-y-5">
                 {/* Patient summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-green-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             About {data.patient.name || "the patient"}
                         </h2>
@@ -67,7 +67,7 @@ export function ReviewPage({
 
                 {/* Care summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-green-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             What's next
                         </h2>
@@ -83,7 +83,7 @@ export function ReviewPage({
 
                 {/* Support summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-green-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             How people can help
                         </h2>
@@ -100,7 +100,7 @@ export function ReviewPage({
                                 {support.map(([key]) => (
                                     <span
                                         key={key}
-                                        className="rounded-full border border-[var(--cb-green-200)] bg-[var(--cb-green-50)] px-3 py-1.5 text-sm font-medium text-[var(--cb-green-700)]"
+                                        className="rounded-full border border-[var(--cb-brand-200)] bg-[var(--cb-brand-50)] px-3 py-1.5 text-sm font-medium text-[var(--cb-brand-700)]"
                                     >
                                         {key}
                                     </span>

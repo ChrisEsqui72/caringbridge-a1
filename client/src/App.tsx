@@ -9,6 +9,7 @@ import { SupportPage } from "./pages/SupportPage";
 import { ReviewPage } from "./pages/ReviewPage";
 import { DraftsPage } from "./pages/DraftsPage";
 import { EditorPage } from "./pages/EditorPage";
+import { PageShell } from "./components/PageShell";
 
 import type { OnboardingData } from "../../shared/types";
 import type { Draft } from "../../shared/types";
@@ -159,6 +160,7 @@ function App() {
     />
   );
 
+  const renderPage = () => {
   switch (page) {
     case "landing":
       return (
@@ -255,6 +257,9 @@ function App() {
     default:
       return null;
   }
+  };
+
+  return <PageShell>{renderPage()}</PageShell>;
 }
 
 export default App;
