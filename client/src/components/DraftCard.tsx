@@ -11,13 +11,15 @@ interface Props {
 const toneLabels = {
     "warm-personal": "Warm & Personal",
     "clear-informative": "Clear & Informative",
-    "community-focused": "Community-Focused"
+    "community-focused": "Community-Focused",
+    "custom": "Your Own Words"
 };
 
 const toneDescriptions = {
     "warm-personal": "Personal and heartfelt",
     "clear-informative": "Straightforward and informative",
-    "community-focused": "Focused on staying connected"
+    "community-focused": "Focused on staying connected",
+    "custom": "Written by you"
 };
 
 export function DraftCard({

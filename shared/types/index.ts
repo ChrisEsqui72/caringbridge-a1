@@ -56,7 +56,8 @@ export interface OnboardingData {
 export type DraftTone =
     | "warm-personal"
     | "clear-informative"
-    | "community-focused";
+    | "community-focused"
+    | "custom";
 
 export interface Draft {
     id: string;

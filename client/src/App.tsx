@@ -131,6 +131,34 @@ function App() {
     setPage(nextPage);
   };
 
+  // Opens the editor on an empty draft so the user can write their own
+  // update instead of starting from one of the generated options.
+  const startOwnDraft = () => {
+    setSelectedDraft({
+      id: crypto.randomUUID(),
+      tone: "custom",
+      title: "",
+      body: "",
+      coveredTopics: [],
+    });
+
+    navigate("editor");
+  };
+
+  const renderDraftsPage = () => (
+    <DraftsPage
+      data={data}
+      drafts={drafts}
+      setDrafts={setDrafts}
+      onSelect={(draft) => {
+        setSelectedDraft(draft);
+        navigate("editor");
+      }}
+      onBack={() => navigate("review")}
+      onDraftOwn={startOwnDraft}
+    />
+  );
+
   switch (page) {
     case "landing":
       return (
@@ -199,35 +227,11 @@ function App() {
       );
 
     case "drafts":
-      return (
-        <DraftsPage
-          data={data}
-          drafts={drafts}
-          setDrafts={setDrafts}
-          onSelect={(draft) => {
-            setSelectedDraft(draft);
-            navigate("editor");
-          }}
-          onBack={() => navigate("review")}
-          onNext={() => navigate("editor")}
-        />
-      );
+      return renderDraftsPage();
 
     case "editor":
       if (!selectedDraft) {
-        return (
-          <DraftsPage
-            data={data}
-            drafts={drafts}
-            setDrafts={setDrafts}
-            onSelect={(draft) => {
-              setSelectedDraft(draft);
-              navigate("editor");
-            }}
-            onBack={() => navigate("review")}
-            onNext={() => navigate("editor")}
-          />
-        );
+        return renderDraftsPage();
       }
 
       return (
@@ -237,9 +241,11 @@ function App() {
             setSelectedDraft(updatedDraft);
 
             setDrafts((currentDrafts) =>
-              currentDrafts.map((draft) =>
-                draft.id === updatedDraft.id ? updatedDraft : draft
-              )
+              currentDrafts.some((draft) => draft.id === updatedDraft.id)
+                ? currentDrafts.map((draft) =>
+                    draft.id === updatedDraft.id ? updatedDraft : draft
+                  )
+                : [...currentDrafts, updatedDraft]
             );
           }}
           onBack={() => navigate("drafts")}

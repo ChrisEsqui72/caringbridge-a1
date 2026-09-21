@@ -17,7 +17,7 @@ interface Props {
     setDrafts: (drafts: Draft[]) => void;
     onSelect: (draft: Draft) => void;
     onBack: () => void;
-    onNext: () => void;
+    onDraftOwn: () => void;
 }
 
 export function DraftsPage({
@@ -26,7 +26,7 @@ export function DraftsPage({
     setDrafts,
     onSelect,
     onBack,
-    onNext
+    onDraftOwn
 }: Props) {
     const [loadingId, setLoadingId] =
         useState<string | null>(null);
@@ -154,10 +154,10 @@ export function DraftsPage({
                 </Button>
 
                 <Button
-                    variant="ghost"
-                    onClick={onNext}
+                    variant="secondary"
+                    onClick={onDraftOwn}
                 >
-                    Continue →
+                    Draft my own post
                 </Button>
             </div>
         </>
