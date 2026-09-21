@@ -47,15 +47,13 @@ export function EditorPage({
     const markChanged = () => setSaved(false);
 
     // Back and Finish commit the current text too, so leaving the editor
-    // never silently discards what the user typed. Covered topics are
-    // carried back so the draft card reflects what was added here.
+    // never silently discards what the user typed. `coveredTopics` is left
+    // as the model wrote it: rewriting it from the checklist would change
+    // the draft card just by opening and leaving the editor.
     const current = (): Draft => ({
         ...draft,
         title,
         body,
-        coveredTopics: checklist
-            .filter((item) => item.checked)
-            .map((item) => item.label),
         customTopics: items
             .filter((item) => !item.evidence)
             .map(({ label, checked }) => ({ label, checked }))
@@ -166,7 +164,10 @@ export function EditorPage({
                     </Button>
 
                     {!hasContent && (
-                        <span className="cb-editor__hint">
+                        <span
+                            id="cb-editor-hint"
+                            className="cb-editor__hint"
+                        >
                             Add some detail to continue.
                         </span>
                     )}
@@ -174,6 +175,9 @@ export function EditorPage({
                     <Button
                         onClick={() => onFinish(current())}
                         disabled={!hasContent}
+                        describedBy={
+                            hasContent ? undefined : "cb-editor-hint"
+                        }
                     >
                         Save and continue →
                     </Button>

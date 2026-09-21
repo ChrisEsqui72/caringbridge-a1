@@ -4,6 +4,7 @@ interface ButtonProps {
     type?: "button" | "submit";
     variant?: "primary" | "secondary" | "ghost";
     disabled?: boolean;
+    describedBy?: string;
 }
 
 export function Button({
@@ -11,13 +12,15 @@ export function Button({
     onClick,
     type = "button",
     variant = "primary",
-    disabled = false
+    disabled = false,
+    describedBy
 }: ButtonProps) {
     return (
         <button
             type={type}
             onClick={onClick}
             disabled={disabled}
+            aria-describedby={describedBy}
             className={`cb-btn cb-btn--${variant}`}
         >
             {children}

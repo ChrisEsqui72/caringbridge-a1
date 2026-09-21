@@ -132,6 +132,12 @@ export function PostChecklist({
                 <form
                     className="cb-checklist__add-form"
                     onSubmit={submitNewItem}
+                    onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                            setNewLabel("");
+                            setAdding(false);
+                        }
+                    }}
                 >
                     <input
                         className="cb-field__control"

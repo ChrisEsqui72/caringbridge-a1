@@ -65,8 +65,8 @@ export interface Draft {
     title: string;
     body: string;
     coveredTopics: string[];
-    // Checklist topics the user added in the editor. Client-only; kept on
-    // the draft so they survive leaving and reopening the editor.
+    // Checklist topics the user added in the editor, kept on the draft so
+    // they survive leaving and reopening it. The server ignores them.
     customTopics?: CustomTopic[];
 }
 

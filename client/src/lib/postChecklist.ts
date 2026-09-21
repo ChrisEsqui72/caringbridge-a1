@@ -157,11 +157,22 @@ const MIN_WORD_LENGTH = 4;
 // Below this many meaningful words, only an exact mention counts.
 const MIN_WORDS_FOR_OVERLAP = 3;
 
+// Long enough to pass MIN_WORD_LENGTH but common in any update, so they
+// say nothing about which topic a sentence is about.
+const FILLER_WORDS = new Set([
+    "about", "been", "from", "have", "here", "more", "that", "their",
+    "them", "they", "this", "update", "updates", "were", "what", "when",
+    "will", "with", "your"
+]);
+
 const significantWords = (text: string): string[] =>
     text
         .toLowerCase()
         .split(/[^a-z0-9]+/)
-        .filter((word) => word.length >= MIN_WORD_LENGTH);
+        .filter(
+            (word) =>
+                word.length >= MIN_WORD_LENGTH && !FILLER_WORDS.has(word)
+        );
 
 const escapeRegExp = (value: string) =>
     value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -211,7 +222,11 @@ export function withCoverage(
             ? {
                   ...item,
                   checked:
-                      mentions(text, words, item.line) ||
+                      // The line is our own template, so only a verbatim
+                      // copy counts: fuzzy-matching its wording would tick
+                      // "Who's writing" for any post saying "updates here".
+                      (item.line !== undefined &&
+                          containsWhole(text, item.line.toLowerCase())) ||
                       item.evidence.some((phrase) =>
                           mentions(text, words, phrase)
                       )
