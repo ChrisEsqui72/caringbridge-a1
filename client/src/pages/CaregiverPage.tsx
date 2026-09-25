@@ -1,7 +1,11 @@
+import { useId } from "react";
+
 import { PageHeader } from "../components/PageHeader";
 import { TextInput } from "../components/TextInput";
 import type { OnboardingData } from "../../../shared/types";
 import { Button } from "../components/Button";
+import { useValidatedSubmit } from "../hooks/useValidatedSubmit";
+import { hasCaregiver, validateCaregiver } from "../lib/validation";
 
 interface Props {
     data: OnboardingData;
@@ -18,6 +22,16 @@ export function CaregiverPage({
     onBack,
     onNext
 }: Props) {
+    const { errors, submit, formRef } = useValidatedSubmit(
+        () => validateCaregiver(data.caregiver),
+        onNext
+    );
+
+    const contactErrorId = useId();
+    // Name and a way to reach them become required once a caregiver is
+    // started; leaving every field empty skips the caregiver entirely.
+    const isStarted = hasCaregiver(data.caregiver);
+
     return (
         <>
             <PageHeader
@@ -26,7 +40,10 @@ export function CaregiverPage({
                 description="This information can help people know who to contact."
             />
 
-            <div className="mx-auto mt-8 w-full max-w-3xl">
+            <div
+                ref={formRef}
+                className="mx-auto mt-8 w-full max-w-3xl"
+            >
                 <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
                     {/* Section header */}
                     <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
@@ -35,8 +52,10 @@ export function CaregiverPage({
                         </h2>
 
                         <p className="mt-1 text-sm leading-6 text-[var(--cb-text-muted)]">
-                            Add the person who can help coordinate
-                            updates, questions, or support.
+                            Optional. Add the person who can help
+                            coordinate updates, questions, or support.
+                            If you do, include their name and an email
+                            or phone number.
                         </p>
                     </div>
 
@@ -53,6 +72,8 @@ export function CaregiverPage({
                                         })
                                     }
                                     placeholder="Sarah"
+                                    required={isStarted}
+                                    error={errors.name}
                                 />
 
                                 <TextInput
@@ -74,6 +95,7 @@ export function CaregiverPage({
 
                                 <p className="mt-1 mb-4 text-sm leading-6 text-[var(--cb-text-muted)]">
                                     How should people get in touch?
+                                    {isStarted && " Add at least one."}
                                 </p>
 
                                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -87,6 +109,13 @@ export function CaregiverPage({
                                         }
                                         placeholder="sarah@example.com"
                                         type="email"
+                                        error={errors.email}
+                                        invalid={Boolean(errors.contact)}
+                                        describedBy={
+                                            errors.contact
+                                                ? contactErrorId
+                                                : undefined
+                                        }
                                     />
 
                                     <TextInput
@@ -99,8 +128,24 @@ export function CaregiverPage({
                                         }
                                         placeholder="(555) 555-5555"
                                         type="tel"
+                                        error={errors.phone}
+                                        invalid={Boolean(errors.contact)}
+                                        describedBy={
+                                            errors.contact
+                                                ? contactErrorId
+                                                : undefined
+                                        }
                                     />
                                 </div>
+
+                                {errors.contact && (
+                                    <p
+                                        id={contactErrorId}
+                                        className="cb-field__error"
+                                    >
+                                        {errors.contact}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -115,7 +160,7 @@ export function CaregiverPage({
                         ← Back
                     </Button>
 
-                    <Button onClick={onNext}>
+                    <Button onClick={submit}>
                         Continue →
                     </Button>
                 </div>

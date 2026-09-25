@@ -579,6 +579,33 @@ textarea.cb-field__control {
   resize: vertical;
 }
 
+.cb-field__control[aria-invalid="true"] {
+  border-color: var(--cb-danger-600);
+  background: var(--cb-danger-50);
+  /* Thickens the border without shifting the field's contents. */
+  box-shadow: inset 0 0 0 1px var(--cb-danger-600);
+}
+
+.cb-field__control[aria-invalid="true"]:focus {
+  border-color: var(--cb-danger-600);
+  box-shadow:
+    inset 0 0 0 1px var(--cb-danger-600),
+    0 0 0 4px var(--cb-danger-50);
+}
+
+/* The warning mark keeps the error from being signalled by colour alone. */
+.cb-field__error {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--cb-danger-600);
+}
+
+.cb-field__error::before {
+  content: "⚠ ";
+}
+
 /* ------------------------------------------------------------ Landing card */
 
 .cb-landing__card {

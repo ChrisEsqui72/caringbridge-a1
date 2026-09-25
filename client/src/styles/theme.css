@@ -56,6 +56,8 @@
   --cb-text-muted: var(--cb-gray-500);
   --cb-border: var(--cb-gray-200);
   --cb-text-placeholder: var(--cb-gray-450);
+  --cb-danger-50: #fef3f2;  /* derived */
+  --cb-danger-600: #c4320a; /* derived */
 
   /* Shape — CaringBridge uses a uniform 6px radius */
   --cb-radius-sm: 4px;
