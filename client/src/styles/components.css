@@ -563,8 +563,11 @@
     box-shadow 150ms ease;
 }
 
+/* Lighter and italic so example text can't be mistaken for an answer. */
 .cb-field__control::placeholder {
-  color: var(--cb-text-muted);
+  color: var(--cb-text-placeholder);
+  font-style: italic;
+  font-size: 0.875em;
 }
 
 .cb-field__control:focus {
