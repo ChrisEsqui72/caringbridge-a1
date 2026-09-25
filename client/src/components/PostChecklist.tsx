@@ -1,34 +1,15 @@
-import { useState, type FormEvent } from "react";
 import type { ChecklistItem } from "../lib/postChecklist";
 
 interface Props {
     items: ChecklistItem[];
     onPick: (item: ChecklistItem) => void;
-    onRemove: (item: ChecklistItem) => void;
-    onAdd: (label: string) => void;
 }
 
 export function PostChecklist({
     items,
-    onPick,
-    onRemove,
-    onAdd
+    onPick
 }: Props) {
-    const [adding, setAdding] = useState(false);
-    const [newLabel, setNewLabel] = useState("");
-
     const coveredCount = items.filter((item) => item.checked).length;
-
-    const submitNewItem = (event: FormEvent) => {
-        event.preventDefault();
-
-        if (newLabel.trim()) {
-            onAdd(newLabel.trim());
-        }
-
-        setNewLabel("");
-        setAdding(false);
-    };
 
     return (
         <section
@@ -68,8 +49,7 @@ export function PostChecklist({
 
             {items.length === 0 ? (
                 <p className="cb-checklist__empty">
-                    Nothing yet. Add a topic you want to be sure to
-                    mention.
+                    No suggestions for this post yet.
                 </p>
             ) : (
                 <ul className="cb-checklist__list">
@@ -108,62 +88,13 @@ export function PostChecklist({
                                         {item.label}
                                     </span>
                                     <span className="sr-only">
-                                        {item.line
-                                            ? "(add a line about this)"
-                                            : "(mark as covered)"}
+                                        (add a line about this)
                                     </span>
                                 </button>
                             )}
-
-                            <button
-                                type="button"
-                                className="cb-checklist__remove"
-                                onClick={() => onRemove(item)}
-                                aria-label={`Remove "${item.label}"`}
-                            >
-                                ✕
-                            </button>
                         </li>
                     ))}
                 </ul>
-            )}
-
-            {adding ? (
-                <form
-                    className="cb-checklist__add-form"
-                    onSubmit={submitNewItem}
-                    onKeyDown={(event) => {
-                        if (event.key === "Escape") {
-                            setNewLabel("");
-                            setAdding(false);
-                        }
-                    }}
-                >
-                    <input
-                        className="cb-field__control"
-                        value={newLabel}
-                        onChange={(event) =>
-                            setNewLabel(event.target.value)
-                        }
-                        placeholder="e.g. Visiting hours"
-                        aria-label="New topic"
-                        autoFocus
-                    />
-                    <button
-                        type="submit"
-                        className="cb-btn cb-btn--secondary"
-                    >
-                        Add
-                    </button>
-                </form>
-            ) : (
-                <button
-                    type="button"
-                    className="cb-checklist__add"
-                    onClick={() => setAdding(true)}
-                >
-                    + Add item
-                </button>
             )}
 
             <p className="cb-checklist__hint">

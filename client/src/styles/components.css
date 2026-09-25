@@ -847,8 +847,6 @@ button.cb-checklist__pick:hover {
 }
 
 .cb-checklist__pick:focus-visible,
-.cb-checklist__remove:focus-visible,
-.cb-checklist__add:focus-visible,
 .cb-share__chip-remove:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--cb-brand-450);
@@ -891,7 +889,6 @@ button.cb-checklist__pick:hover .cb-checklist__box {
   overflow-wrap: anywhere;
 }
 
-.cb-checklist__remove,
 .cb-share__chip-remove {
   display: flex;
   height: 1.75rem;
@@ -907,40 +904,9 @@ button.cb-checklist__pick:hover .cb-checklist__box {
   cursor: pointer;
 }
 
-.cb-checklist__remove:hover,
 .cb-share__chip-remove:hover {
   background: var(--cb-gray-100);
   color: var(--cb-brand-500);
-}
-
-.cb-checklist__add {
-  display: block;
-  width: 100%;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  border: 1px dashed var(--cb-gray-300);
-  border-radius: var(--cb-radius-sm);
-  background: transparent;
-  color: var(--cb-text-muted);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.cb-checklist__add:hover {
-  border-color: var(--cb-brand-300);
-  color: var(--cb-brand-500);
-}
-
-.cb-checklist__add-form {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.cb-checklist__add-form .cb-field__control {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
 }
 
 .cb-checklist__hint {
