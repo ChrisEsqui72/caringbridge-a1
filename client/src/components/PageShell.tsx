@@ -16,10 +16,7 @@ export function PageShell({
         <main className="cb-shell">
             <BrandHeader />
 
-            <div className="cb-shell__inner">
-                {children}
-            </div>
-
+            {/* Sticky, so it stays in view on the longer forms. */}
             {step !== undefined && totalSteps !== undefined && (
                 <div className="cb-shell__progress">
                     <ProgressBar
@@ -28,6 +25,10 @@ export function PageShell({
                     />
                 </div>
             )}
+
+            <div className="cb-shell__inner">
+                {children}
+            </div>
         </main>
     );
 }

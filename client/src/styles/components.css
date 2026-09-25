@@ -490,7 +490,7 @@
 .cb-progress {
   width: 100%;
   max-width: 48rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto;
 }
 
 .cb-progress__meta {
@@ -1151,6 +1151,28 @@ button.cb-checklist__pick:hover .cb-checklist__box {
   justify-content: center;
 }
 
+/* Pinned under the brand header while the page scrolls beneath it. */
 .cb-shell__progress {
-  margin-top: 3rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  /* Bleeds through the shell's side padding so the strip spans the window. */
+  margin: -1rem -1rem 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--cb-background);
+  box-shadow: 0 1px 0 var(--cb-border);
+}
+
+@media (min-width: 640px) {
+  .cb-shell__progress {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Keeps fields reached by Tab from landing under the pinned bar. */
+html:has(.cb-shell__progress) {
+  scroll-padding-top: 5rem;
 }
