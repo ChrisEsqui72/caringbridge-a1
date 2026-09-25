@@ -3,6 +3,8 @@ import { TextInput } from "../components/TextInput";
 import { TextArea } from "../components/TextArea";
 import type { OnboardingData } from "../../../shared/types";
 import { Button } from "../components/Button";
+import { useValidatedSubmit } from "../hooks/useValidatedSubmit";
+import { validatePatient } from "../lib/validation";
 
 interface Props {
     data: OnboardingData;
@@ -19,6 +21,11 @@ export function PatientPage({
     onNext,
     onBack
 }: Props) {
+    const { errors, submit, formRef } = useValidatedSubmit(
+        () => validatePatient(data.patient),
+        onNext
+    );
+
     return (
         <>
             <PageHeader
@@ -27,7 +34,10 @@ export function PatientPage({
                 description="You don't need to find the perfect words. Just tell us what's happening."
             />
 
-            <div className="mx-auto mt-8 w-full max-w-3xl">
+            <div
+                ref={formRef}
+                className="mx-auto mt-8 w-full max-w-3xl"
+            >
                 <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
                     {/* Form introduction */}
                     <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
@@ -54,6 +64,7 @@ export function PatientPage({
                                 }
                                 placeholder="John"
                                 required
+                                error={errors.name}
                             />
 
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -90,6 +101,7 @@ export function PatientPage({
                                 }
                                 placeholder="Lymphoma"
                                 required
+                                error={errors.diagnosis}
                             />
                         </div>
 
@@ -117,6 +129,7 @@ export function PatientPage({
                                 placeholder="For example: John was diagnosed with lymphoma last week. He's starting treatment soon, and we're taking things one day at a time..."
                                 rows={6}
                                 required
+                                error={errors.description}
                             />
 
                             <p className="mt-2 text-xs leading-5 text-[var(--cb-text-muted)]">
@@ -136,7 +149,7 @@ export function PatientPage({
                         ← Back
                     </Button>
 
-                    <Button onClick={onNext}>
+                    <Button onClick={submit}>
                         Continue →
                     </Button>
                 </div>

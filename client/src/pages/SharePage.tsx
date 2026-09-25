@@ -9,6 +9,7 @@ import {
 import type { Draft, OnboardingData } from "../../../shared/types";
 import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
+import { EMAIL_PATTERN } from "../lib/validation";
 
 interface Props {
     draft: Draft;
@@ -26,7 +27,6 @@ type PublishState = "idle" | "publishing" | "published";
 const PRETEND_PUBLISH_MS = 1200;
 const COPIED_RESET_MS = 2000;
 const SITE_HOST = "caringbridge.org/visit/";
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const possessive = (name: string) =>
     name.endsWith("s") ? `${name}'` : `${name}'s`;

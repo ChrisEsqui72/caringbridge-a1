@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 interface TextAreaProps {
     label: string;
     value: string;
@@ -5,6 +7,7 @@ interface TextAreaProps {
     placeholder?: string;
     rows?: number;
     required?: boolean;
+    error?: string;
 }
 
 export function TextArea({
@@ -13,14 +16,20 @@ export function TextArea({
     onChange,
     placeholder,
     rows = 5,
-    required
+    required,
+    error
 }: TextAreaProps) {
+    const errorId = useId();
+
     return (
         <label className="cb-field">
             <span className="cb-field__label">
                 {label}
                 {required && (
-                    <span className="cb-field__required">
+                    <span
+                        className="cb-field__required"
+                        aria-hidden="true"
+                    >
                         *
                     </span>
                 )}
@@ -34,8 +43,16 @@ export function TextArea({
                 placeholder={placeholder}
                 rows={rows}
                 required={required}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? errorId : undefined}
                 className="cb-field__control"
             />
+
+            {error && (
+                <span id={errorId} className="cb-field__error">
+                    {error}
+                </span>
+            )}
         </label>
     );
 }
