@@ -2,10 +2,16 @@ import { Button } from "../components/Button";
 import { PageHeader } from "../components/PageHeader";
 
 interface LandingPageProps {
+  hasProgress: boolean;
   onNext: () => void;
+  onStartOver: () => void;
 }
 
-export function LandingPage({ onNext }: LandingPageProps) {
+export function LandingPage({
+  hasProgress,
+  onNext,
+  onStartOver,
+}: LandingPageProps) {
   return (
     <div className="cb-landing__card">
       <PageHeader
@@ -16,13 +22,20 @@ export function LandingPage({ onNext }: LandingPageProps) {
 
       <div className="cb-landing__actions">
         <Button onClick={onNext}>
-          Get started →
+          {hasProgress ? "Continue where you left off →" : "Get started →"}
         </Button>
+
+        {hasProgress && (
+          <Button variant="secondary" onClick={onStartOver}>
+            Start over
+          </Button>
+        )}
       </div>
 
       <p className="cb-landing__note">
-        You’ll review the information before anything is turned into a
-        draft.
+        {hasProgress
+          ? "Starting over clears everything you’ve entered and any drafts."
+          : "You’ll review the information before anything is turned into a draft."}
       </p>
     </div>
   );

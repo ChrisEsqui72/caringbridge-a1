@@ -5,7 +5,9 @@ import {
 
 import type {
     Draft,
-    OnboardingData
+    DraftTone,
+    OnboardingData,
+    PageFor
 } from "../../../shared/types/index.js";
 
 import { SUPPORT_LABELS } from "../../../shared/types/index.js";
@@ -19,88 +21,212 @@ const MODEL_ID =
     process.env.BEDROCK_MODEL_ID ??
     "amazon.nova-lite-v1:0";
 
+const MODEL_TONES: DraftTone[] = [
+    "warm-personal",
+    "clear-informative",
+    "community-focused"
+];
+
+/**
+ * How to write, shared by first drafts and regenerated ones so both follow
+ * the same tone guides. The response shape is left to each request, since
+ * one returns three drafts and the other returns one.
+ */
 const SYSTEM_PROMPT = `
-You help users create a first health update for a CaringBridge-style personal journal.
+Your job is to write the first journal update for a CaringBridge-style page: a private
+site where someone going through a health event keeps friends and family
+informed. The readers care about the patient. They want to know what is
+happening, what comes next, and how they can help.
 
-The user has provided information about a patient, their care, their caregiver, and ways their community can provide support.
+You will be given who the author is, the facts they entered, and the kinds
+of support they want to mention. Turn those facts into an update that sounds
+like a real person wrote it for people they know so that the author can edit and post it on their page.
 
-Your job is to create exactly three meaningful draft updates using the information provided.
+## Voice
 
-The three drafts must have these tones:
+- Write as the author, never as an assistant. Never mention drafts,
+  templates, or AI.
+- Use plain, everyday words. Contractions are good. Keep paragraphs to two
+  to four sentences.
+- Call the patient by their first name. Use the pronouns the author used
+  for the patient in their own words. If they used none, use the name or
+  rephrase. Never guess "he" or "she" from a name.
 
-1. warm-personal
-   - Warm, personal, and compassionate.
-   - Appropriate for updating friends and family.
-   - Should feel natural rather than overly formal.
+## Facts
 
-2. clear-informative
-   - Clear, organized, and straightforward.
-   - Prioritize the important facts and upcoming steps.
-   - Avoid unnecessary emotional language.
+Every fact must come from the information given. That covers the
+diagnosis, treatment, dates, places, people, and how anyone feels.
 
-3. community-focused
-   - Emphasize the role of the patient's community.
-   - Clearly communicate ways people can provide support when appropriate.
-   - Still provide the important health and care information.
+- If the author described a feeling or outlook in their own words (for
+  example "we're taking things one day at a time"), you may carry it
+  through, in their words or close to them.
+- Otherwise do not say how the patient, the author, or the readers feel,
+  and do not describe the patient's character ("so strong", "a fighter",
+  "staying positive"). Warmth comes from how the author speaks to the
+  readers, not from adjectives about the patient.
+- Do not explain the diagnosis, predict outcomes, or give medical advice.
+- If something wasn't given, leave it out rather than filling it in.
 
-Important rules:
+## Tones
 
-- Use the provided information accurately.
-- Never invent medical facts, diagnoses, treatments, prognosis, dates, events, or personal information.
-- Do not make assumptions about information that was not provided.
-- Do not provide medical advice.
-- Do not make the update unnecessarily dramatic or frightening.
-- Use compassionate and natural language.
-- Write as though the update is being written by the caregiver or person creating the journal.
-- Respect the intended audience indicated by pageFor.
-- Only mention support options that are actually selected in the support information.
-- If a support option is not selected, do not imply that the user needs it.
-- Do not include private contact information such as email addresses or phone numbers in the draft unless the provided information explicitly indicates that it should be public.
-- The patient's date of birth does not need to appear in the update unless it is relevant to the writing.
-- Each draft should communicate the important information without simply copying the input fields word-for-word.
-- Do not add emotional descriptions, relationships, opinions, feelings, or characterizations that are not explicitly supported by the provided information.
-- Do not invent phrases such as "my rock", "incredibly strong", "fighting", "staying positive", etc.
-- Do not imply that the author, patient, caregiver, or audience feels a particular way unless that feeling is explicitly provided.
-- You may use natural conversational language and reasonable transitions to make the update sound human.
-- Do not infer that someone is struggling, hopeful, strong, positive, grateful, scared, overwhelmed, or in need unless that is explicitly supported by the provided information.
-- Selecting a support option means the user wants that type of support mentioned; it does not necessarily mean the patient is currently in crisis or urgently needs it.
+Each tone is a different kind of letter, not the same letter with different
+adjectives. Drafts in different tones should differ in how they open, what
+order they go in, and how they close.
 
-Return ONLY valid JSON.
+### warm-personal: a letter to people who love the patient
+- Open by greeting the readers directly ("Hi everyone,") and saying why
+  you're writing.
+- Tell what has happened as a short story, in the order it happened, the
+  way you'd tell a close friend.
+- Then say what's coming next, and, if any support options were given,
+  how readers can help.
+- Close by thanking people for reading and following along, and say you'll
+  keep posting updates here.
 
-DO NOT wrap the JSON in Markdown code fences.
-Do not include any explanation, introduction, or text before or after the JSON.
-The first character of your response must be { and the last character must be }.
+### clear-informative: a briefing for someone who wants the facts quickly
+- The first sentence gives the main news: who, and the diagnosis or reason
+  for care. Skip the greeting, or keep it to "Hi all,".
+- Then what happens next, in date order. When there are two or more
+  upcoming events, put each on its own line starting with "- " (for example
+  "- Surgery on March 4").
+- Short, direct sentences. No metaphors and no filler.
+- If any support options were given, list them, each on its own line
+  starting with "- ". If a care coordinator is named, say they are the
+  person to go to with offers of help.
+- Close with one sentence saying updates will be posted here.
 
-The JSON must contain exactly three drafts in this format:
+### community-focused: a note to the whole circle about staying connected and helping
+- Open by addressing the group ("Friends and family," or "To everyone who
+  has reached out,") and say this page is where they can keep up.
+- Give the situation in two or three sentences.
+- Most of the update is about how people can help. Name every support
+  option given, each as a specific, friendly invitation rather than a plea
+  (for example "If you'd like to help with meals, ..."). Add no ways to help
+  beyond those given.
+- If a care coordinator is named, say they are the person to go to with
+  offers of help.
+- If no support options were given, write about staying connected instead
+  (following the page, leaving a note) and ask for nothing.
+- Close by thanking people for being part of the patient's circle.
 
-{
-    "drafts": [
-        {
-            "id": "warm-personal",
-            "tone": "warm-personal",
-            "title": "string",
-            "body": "string",
-            "coveredTopics": ["string"]
-        },
-        {
-            "id": "clear-informative",
-            "tone": "clear-informative",
-            "title": "string",
-            "body": "string",
-            "coveredTopics": ["string"]
-        },
-        {
-            "id": "community-focused",
-            "tone": "community-focused",
-            "title": "string",
-            "body": "string",
-            "coveredTopics": ["string"]
-        }
-    ]
+## Length
+
+Match the length to how much the author gave you. A few sparse facts make a
+short update of 60 to 120 words. Detailed input makes a fuller one, up to
+about 300 words. Don't pad a thin update, and don't squeeze a detailed one
+into a summary.
+
+## Title
+
+Three to eight words that say what this update is about, in the same tone
+as the body (for example "Starting treatment next week"). No colons or
+emojis, and nothing generic like "An update".
+
+## Body format
+
+Plain text. Put a blank line between paragraphs. No Markdown headings, bold,
+or emojis. No sign-off, signature, or placeholders like [Name]; the page
+shows who posted it.
+
+## coveredTopics
+
+The pieces of information the body actually includes, each two to four
+words (for example "Diagnosis", "Upcoming surgery", "Meal help"). List only
+what is in the body.
+
+## Output
+
+Respond with one JSON object in the shape the request gives. The first
+character must be { and the last must be }. No Markdown code fences and no
+text before or after the JSON.
+`;
+
+const DRAFT_FIELDS = `"title": "string",
+    "body": "string",
+    "coveredTopics": ["string"]`;
+
+/**
+ * Pins the point of view. Without it the model switched between "I", "we",
+ * and a narrator voice, sometimes within one draft.
+ */
+function describeAuthor(data: OnboardingData): string {
+    const name = data.patient?.name?.trim() || "the patient";
+
+    const byPageFor: Record<PageFor, string> = {
+        myself: `The author is the patient, ${name}, writing about themselves. Write in the first person ("I", "my").`,
+        family: `The author is a member of ${name}'s family. Write in the first person, using "we" for the family where it fits.`,
+        friend: `The author is a friend of ${name}. Write in the first person ("I"), and don't speak for the family.`,
+        someone_else: `The author is writing on ${name}'s behalf. Write in the first person ("I").`
+    };
+
+    return byPageFor[data.pageFor ?? "someone_else"];
 }
 
-coveredTopics should be a short list of the major pieces of information included in that particular draft.
-`;
+// Parsed as UTC so the server's timezone can't shift the day.
+const formatDate = (value: string): string => {
+    const [year, month, day] = value.split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    return Number.isNaN(date.getTime())
+        ? value
+        : date.toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              timeZone: "UTC"
+          });
+};
+
+/**
+ * The facts as labeled plain text. Date of birth, email, and phone are
+ * never sent: the update goes to a wide circle, and the model can't leak
+ * what it never sees.
+ */
+function describeFacts(data: OnboardingData): string {
+    const lines: string[] = [];
+
+    const add = (label: string, value: string | undefined) => {
+        const text = value?.trim();
+
+        if (text) {
+            lines.push(`${label}: ${text}`);
+        }
+    };
+
+    add("Patient's name", data.patient?.name);
+    add("Where they are", data.patient?.location);
+    add("Diagnosis or reason for care", data.patient?.diagnosis);
+    add("In the author's own words", data.patient?.description);
+    add("What happens next", data.care?.nextSteps);
+
+    const events = (data.care?.upcomingEvents ?? [])
+        .filter((event) => event.type?.trim())
+        .map((event) => {
+            const date = event.date?.trim();
+            const details = event.description?.trim();
+
+            return `- ${event.type.trim()}${date ? ` on ${formatDate(date)}` : ""}${details ? `: ${details}` : ""}`;
+        });
+
+    if (events.length > 0) {
+        lines.push(`Upcoming events:\n${events.join("\n")}`);
+    }
+
+    const coordinator = data.caregiver?.name?.trim();
+    const relationship = data.caregiver?.relationship?.trim();
+
+    if (coordinator) {
+        add(
+            "Care coordinator",
+            relationship
+                ? `${coordinator} (relationship to the patient: ${relationship})`
+                : coordinator
+        );
+    }
+
+    return lines.length > 0
+        ? lines.join("\n")
+        : "The author did not provide any details.";
+}
 
 /**
  * Spells out the selected support options by name. Handing the model a raw
@@ -132,38 +258,64 @@ function describeSupport(data: OnboardingData): string {
     }
 
     if (lines.length === 0) {
-        return "No specific support options were selected. Do not mention or imply any need for support.";
+        return "No support options were selected. No draft may ask readers for help.";
     }
 
-    return `The user selected ${lines.length} support option(s). EVERY one of these must appear in the community-focused draft, and none may be omitted or merged away:
+    return `The author selected ${lines.length} support option(s). The community-focused draft must name EVERY one of these; none may be left out or merged together. The warm-personal and clear-informative drafts should mention every one as well, more briefly.
 
 ${lines.join("\n")}`;
+}
+
+function describeRequest(data: OnboardingData): string {
+    return `
+## Author
+
+${describeAuthor(data)}
+
+## Facts
+
+${describeFacts(data)}
+
+## Support options (authoritative)
+
+${describeSupport(data)}
+
+This list is the only source of truth for support. A kind of help that comes
+up in the author's own words is not on this list unless it appears here, and
+must not become the focus of the update.
+`;
 }
 
 export async function generateDrafts(
     data: OnboardingData
 ): Promise<Draft[]> {
-    const userPrompt = `
-Here is the complete information provided during onboarding:
+    const userPrompt = `${describeRequest(data)}
+## Request
 
-${JSON.stringify(data, null, 2)}
+Write three drafts from these facts, one in each tone: warm-personal,
+clear-informative, and community-focused. Follow each tone's guide.
 
-SUPPORT OPTIONS (authoritative)
+Respond with JSON in exactly this shape:
 
-${describeSupport(data)}
-
-This list is the only source of truth for support needs. If an earlier
-free-text field happens to mention a kind of help, that does not add it to
-this list, and it must not become the focus of the update.
-
-LENGTH
-
-Scale each draft to how much information was actually provided. Sparse
-input should produce a short update of a few sentences; detailed input
-should produce a correspondingly fuller one. Do not pad a thin update to
-look substantial, and do not compress a detailed one into a summary.
-
-Create the three requested drafts using this information.
+{
+  "drafts": [
+    {
+      "id": "warm-personal",
+      "tone": "warm-personal",
+      ${DRAFT_FIELDS}
+    },
+    {
+      "id": "clear-informative",
+      "tone": "clear-informative",
+      ${DRAFT_FIELDS}
+    },
+    {
+      "id": "community-focused",
+      "tone": "community-focused",
+      ${DRAFT_FIELDS}
+    }
+  ]
+}
 `;
 
     const command = new ConverseCommand({
@@ -201,9 +353,6 @@ Create the three requested drafts using this information.
     throw new Error("Bedrock returned an empty response");
     }
 
-    console.log("Raw Bedrock response:");
-    console.log(responseText);
-
     let parsed: {
         drafts?: Draft[];
     };
@@ -218,8 +367,10 @@ Create the three requested drafts using this information.
     try {
         parsed = JSON.parse(cleanedResponse);
     } catch {
-        console.error("Invalid JSON from Bedrock:");
-        console.error(cleanedResponse);
+        // Length only: the response holds the patient's health details.
+        console.error(
+            `Invalid JSON from Bedrock (${cleanedResponse.length} chars)`
+        );
 
         throw new Error(
             "Bedrock returned invalid JSON"
@@ -243,38 +394,34 @@ export async function regenerateDraft(
     data: OnboardingData,
     draft: Draft
 ): Promise<Draft> {
-    const userPrompt = `
-Here is the complete information provided during onboarding:
+    // The tone is interpolated into the prompt, so only accept the ones the
+    // system prompt has a guide for.
+    if (!MODEL_TONES.includes(draft.tone)) {
+        throw new Error(
+            `Cannot regenerate a draft with tone "${draft.tone}"`
+        );
+    }
 
-${JSON.stringify(data, null, 2)}
+    const userPrompt = `${describeRequest(data)}
+## Previous version
 
-Here is the draft that the user wants to regenerate:
+Title: ${draft.title}
 
-${JSON.stringify(draft, null, 2)}
+${draft.body}
 
-Create a new version of this draft.
+## Request
 
-Keep the same tone:
-${draft.tone}
+The author wants a different ${draft.tone} version of this update. Write a
+new one from the same facts, following the ${draft.tone} guide. Cover the
+same information, but make it genuinely different: a new title, a
+different first sentence, and different phrasing throughout. Do not reuse
+sentences from the previous version.
 
-The new version should communicate the same relevant information
-but use different wording and structure.
-
-Do not invent any information that is not supported by the
-onboarding data.
-
-Return ONLY valid JSON in this exact format:
+Respond with JSON in exactly this shape:
 
 {
-    "id": "${draft.id}",
-    "tone": "${draft.tone}",
-    "title": "string",
-    "body": "string",
-    "coveredTopics": ["string"]
+    ${DRAFT_FIELDS}
 }
-
-Do not wrap the JSON in Markdown code fences.
-Do not include any explanation before or after the JSON.
 `;
 
     const command = new ConverseCommand({
@@ -321,20 +468,25 @@ Do not include any explanation before or after the JSON.
         .replace(/\s*```$/i, "")
         .trim();
 
-    let parsed: Draft;
+    let parsed: Pick<Draft, "title" | "body" | "coveredTopics">;
 
     try {
         parsed = JSON.parse(cleanedResponse);
     } catch {
         console.error(
-            "Invalid regeneration response:"
+            `Invalid regeneration JSON from Bedrock (${cleanedResponse.length} chars)`
         );
-        console.error(cleanedResponse);
 
         throw new Error(
             "Bedrock returned invalid JSON"
         );
     }
 
-    return parsed;
+    // Identity comes from the request, not the model, so a regenerated
+    // draft always replaces the one the user clicked.
+    return {
+        ...parsed,
+        id: draft.id,
+        tone: draft.tone
+    };
 }

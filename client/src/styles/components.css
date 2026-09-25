@@ -594,7 +594,9 @@ textarea.cb-field__control {
 
 .cb-landing__actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 0.75rem;
   margin-top: 2rem;
 }
 
