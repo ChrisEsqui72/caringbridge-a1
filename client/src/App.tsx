@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LandingPage } from "./pages/LandingPage";
 import { AudiencePage } from "./pages/AudiencePage";
@@ -194,6 +194,12 @@ function App() {
     setInvites([]);
     navigate("landing");
   };
+
+  // Each page is a new screen, so start it at the top rather than wherever
+  // the previous page was scrolled to.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
 
   // Compared by value so answers typed and then erased don't count.
   const hasProgress =
