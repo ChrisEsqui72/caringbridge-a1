@@ -7,8 +7,18 @@ const API_URL =
     import.meta.env.VITE_API_URL ??
     "http://localhost:3001";
 
+// Generation normally takes seconds. Past this, treat the server as
+// unavailable rather than leaving the user on a spinner indefinitely.
+const REQUEST_TIMEOUT_MS = 60_000;
+
+const withTimeout = (signal?: AbortSignal): AbortSignal =>
+    signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(REQUEST_TIMEOUT_MS)])
+        : AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+
 export async function generateDrafts(
-    onboarding: OnboardingData
+    onboarding: OnboardingData,
+    signal?: AbortSignal
 ): Promise<Draft[]> {
     const response = await fetch(
         `${API_URL}/api/drafts/generate`,
@@ -17,7 +27,8 @@ export async function generateDrafts(
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ onboarding })
+            body: JSON.stringify({ onboarding }),
+            signal: withTimeout(signal)
         }
     );
 
@@ -46,7 +57,8 @@ export async function regenerateDraft(
             body: JSON.stringify({
                 onboarding,
                 draft
-            })
+            }),
+            signal: withTimeout()
         }
     );
 

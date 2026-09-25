@@ -606,6 +606,45 @@ textarea.cb-field__control {
   content: "⚠ ";
 }
 
+/* ---------------------------------------------------- Server unavailable */
+
+.cb-unavailable {
+  max-width: 36rem;
+  margin: 2rem auto 0;
+  padding: 1.5rem;
+  border: 1px solid var(--cb-danger-600);
+  border-radius: var(--cb-radius-lg);
+  background: var(--cb-danger-50);
+  text-align: center;
+}
+
+.cb-unavailable__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--cb-danger-600);
+}
+
+.cb-unavailable__text {
+  margin: 0.5rem 0 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  color: var(--cb-text);
+}
+
+.cb-unavailable__inline {
+  max-width: 48rem;
+  margin: 1.5rem auto 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--cb-danger-600);
+}
+
+.cb-unavailable__inline::before {
+  content: "⚠ ";
+}
+
 /* ------------------------------------------------------------ Landing card */
 
 .cb-landing__card {
