@@ -55,7 +55,7 @@ export function AudiencePage({
                 description="This helps us shape the update around your relationship with the patient."
             />
 
-            <div className="mt-8">
+            <div className="mt-5">
                 <CardSelector
                     options={options}
                     value={data.pageFor}
@@ -65,7 +65,7 @@ export function AudiencePage({
                 />
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
+            <div className="mt-5 flex items-center justify-between">
                 <Button
                     variant="secondary"
                     onClick={onBack}

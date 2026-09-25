@@ -42,11 +42,11 @@ export function CaregiverPage({
 
             <div
                 ref={formRef}
-                className="mx-auto mt-8 w-full max-w-3xl"
+                className="mx-auto mt-5 w-full max-w-3xl"
             >
                 <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
                     {/* Section header */}
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-3 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             Caregiver information
                         </h2>
@@ -60,9 +60,9 @@ export function CaregiverPage({
                     </div>
 
                     {/* Form */}
-                    <div className="px-6 py-7 sm:px-8 sm:py-8">
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div className="px-6 py-5 sm:px-8">
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <TextInput
                                     label="Name"
                                     value={data.caregiver.name}
@@ -88,17 +88,17 @@ export function CaregiverPage({
                                 />
                             </div>
 
-                            <div className="border-t border-[var(--cb-border)] pt-6">
+                            <div className="border-t border-[var(--cb-border)] pt-4">
                                 <h3 className="text-sm font-semibold text-[var(--cb-text)]">
                                     Contact information
                                 </h3>
 
-                                <p className="mt-1 mb-4 text-sm leading-6 text-[var(--cb-text-muted)]">
+                                <p className="mt-1 mb-3 text-sm leading-6 text-[var(--cb-text-muted)]">
                                     How should people get in touch?
                                     {isStarted && " Add at least one."}
                                 </p>
 
-                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <TextInput
                                         label="Email"
                                         value={data.caregiver.email}
@@ -152,7 +152,7 @@ export function CaregiverPage({
                 </div>
 
                 {/* Navigation */}
-                <div className="mt-8 flex items-center justify-between px-2 sm:px-4">
+                <div className="mt-5 flex items-center justify-between px-2 sm:px-4">
                     <Button
                         variant="secondary"
                         onClick={onBack}

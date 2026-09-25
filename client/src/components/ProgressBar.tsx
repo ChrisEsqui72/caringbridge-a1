@@ -27,6 +27,7 @@ export function ProgressBar({
             <div
                 className="cb-progress__track"
                 role="progressbar"
+                aria-label="Your progress"
                 aria-valuenow={current}
                 aria-valuemin={0}
                 aria-valuemax={total}
