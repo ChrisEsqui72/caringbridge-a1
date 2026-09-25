@@ -195,6 +195,11 @@ function App() {
     navigate("landing");
   };
 
+  // Compared by value so answers typed and then erased don't count.
+  const hasProgress =
+    drafts.length > 0 ||
+    JSON.stringify(data) !== JSON.stringify(initialData);
+
   const renderDraftsPage = () => (
     <DraftsPage
       data={data}
@@ -214,7 +219,9 @@ function App() {
     case "landing":
       return (
         <LandingPage
+          hasProgress={hasProgress}
           onNext={() => navigate("audience")}
+          onStartOver={startOver}
         />
       );
 
