@@ -36,11 +36,11 @@ export function PatientPage({
 
             <div
                 ref={formRef}
-                className="mx-auto mt-8 w-full max-w-3xl"
+                className="mx-auto mt-5 w-full max-w-3xl"
             >
                 <div className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
                     {/* Form introduction */}
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-3 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             Patient information
                         </h2>
@@ -52,8 +52,8 @@ export function PatientPage({
                     </div>
 
                     {/* Form fields */}
-                    <div className="px-6 py-7 sm:px-8 sm:py-8">
-                        <div className="space-y-6">
+                    <div className="px-6 py-5 sm:px-8">
+                        <div className="space-y-4">
                             <TextInput
                                 label="Name"
                                 value={data.patient.name}
@@ -67,7 +67,7 @@ export function PatientPage({
                                 error={errors.name}
                             />
 
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <TextInput
                                     label="Date of birth"
                                     value={data.patient.dateOfBirth}
@@ -106,8 +106,8 @@ export function PatientPage({
                         </div>
 
                         {/* Story section */}
-                        <div className="mt-8 border-t border-[var(--cb-border)] pt-7">
-                            <div className="mb-4">
+                        <div className="mt-5 border-t border-[var(--cb-border)] pt-4">
+                            <div className="mb-3">
                                 <h2 className="text-base font-semibold text-[var(--cb-text)]">
                                     What's happening?
                                 </h2>
@@ -127,7 +127,7 @@ export function PatientPage({
                                     })
                                 }
                                 placeholder="For example: John was diagnosed with lymphoma last week. He's starting treatment soon, and we're taking things one day at a time..."
-                                rows={6}
+                                rows={4}
                                 required
                                 error={errors.description}
                             />
@@ -141,7 +141,7 @@ export function PatientPage({
                 </div>
 
                 {/* Navigation */}
-                <div className="mt-8 flex items-center justify-between px-2 sm:px-4">
+                <div className="mt-5 flex items-center justify-between px-2 sm:px-4">
                     <Button
                         variant="secondary"
                         onClick={onBack}

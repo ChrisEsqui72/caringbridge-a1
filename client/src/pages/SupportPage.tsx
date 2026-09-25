@@ -27,7 +27,7 @@ export function SupportPage({
                 description="Select anything that would make things easier for the patient or caregiver."
             />
 
-            <div className="support-grid">
+            <div className="cb-support-grid">
                 {supportOptions.map((option) => (
                     <CheckboxCard
                         key={option.key}
@@ -49,7 +49,7 @@ export function SupportPage({
                 ))}
             </div>
 
-            <div className="mt-8 flex items-center justify-between px-4">
+            <div className="mt-5 flex items-center justify-between px-4">
                 <Button
                     variant="secondary"
                     onClick={onBack}

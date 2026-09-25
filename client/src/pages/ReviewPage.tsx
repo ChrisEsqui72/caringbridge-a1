@@ -27,22 +27,22 @@ export function ReviewPage({
                 description="Take a moment to make sure everything looks right before we create your drafts."
             />
 
-            <div className="mx-auto mt-8 w-full max-w-3xl space-y-5">
+            <div className="mx-auto mt-5 w-full max-w-3xl space-y-4">
                 {/* Patient summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-3 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             About {data.patient.name || "the patient"}
                         </h2>
                     </div>
 
-                    <div className="px-6 py-6 sm:px-8">
+                    <div className="px-6 py-4 sm:px-8">
                         <p className="text-sm leading-7 text-[var(--cb-text)]">
                             {data.patient.description ||
                                 "No description provided."}
                         </p>
 
-                        <dl className="mt-6 grid grid-cols-1 gap-5 border-t border-[var(--cb-border)] pt-6 sm:grid-cols-2">
+                        <dl className="mt-4 grid grid-cols-1 gap-5 border-t border-[var(--cb-border)] pt-4 sm:grid-cols-2">
                             <div>
                                 <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--cb-text-muted)]">
                                     Diagnosis
@@ -68,13 +68,13 @@ export function ReviewPage({
 
                 {/* Care summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-3 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             What's next
                         </h2>
                     </div>
 
-                    <div className="px-6 py-6 sm:px-8">
+                    <div className="px-6 py-4 sm:px-8">
                         <p className="text-sm leading-7 text-[var(--cb-text)]">
                             {data.care.nextSteps ||
                                 "No upcoming steps provided."}
@@ -84,7 +84,7 @@ export function ReviewPage({
 
                 {/* Support summary */}
                 <section className="overflow-hidden rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-surface)] shadow-sm">
-                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-5 sm:px-8">
+                    <div className="border-b border-[var(--cb-border)] bg-[var(--cb-brand-50)] px-6 py-3 sm:px-8">
                         <h2 className="text-base font-semibold text-[var(--cb-text)]">
                             How people can help
                         </h2>
@@ -95,7 +95,7 @@ export function ReviewPage({
                         </p>
                     </div>
 
-                    <div className="px-6 py-6 sm:px-8">
+                    <div className="px-6 py-4 sm:px-8">
                         {support.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
                                 {support.map(([key]) => (
@@ -116,7 +116,7 @@ export function ReviewPage({
                 </section>
             </div>
 
-            <div className="mx-auto mt-8 flex w-full max-w-3xl items-center justify-between px-2 sm:px-4">
+            <div className="mx-auto mt-5 flex w-full max-w-3xl items-center justify-between px-2 sm:px-4">
                 <Button
                     variant="secondary"
                     onClick={onBack}
