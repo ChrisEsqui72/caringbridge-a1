@@ -1,6 +1,5 @@
 import {
     SUPPORT_LABELS,
-    type CustomTopic,
     type OnboardingData,
     type SupportNeeds
 } from "../../../shared/types";
@@ -9,13 +8,10 @@ import { createId } from "./id";
 export interface ChecklistItem {
     id: string;
     label: string;
-    // The sentence added to the post when the item is picked. Items the
-    // user adds themselves have none; picking them just marks them done.
-    line?: string;
+    // The sentence added to the post when the item is picked.
+    line: string;
     // Text whose presence in the post means the topic is already covered.
-    // Suggestions always have it (possibly empty); user-added topics never
-    // do, and are ticked by hand instead.
-    evidence?: string[];
+    evidence: string[];
     checked: boolean;
 }
 
@@ -64,7 +60,7 @@ const selectedSupport = (support: SupportNeeds): string[] => {
  */
 function suggestions(
     data: OnboardingData
-): Required<Pick<ChecklistItem, "label" | "line" | "evidence">>[] {
+): Pick<ChecklistItem, "label" | "line" | "evidence">[] {
     const { patient, care, caregiver, support } = data;
     const isSelf = data.pageFor === "myself";
     const name = patient.name.trim();
@@ -130,26 +126,15 @@ function suggestions(
 
 /**
  * The same list for every post, whether it started from a generated draft
- * or a blank one: suggestions built from onboarding, then any topics the
- * user added. Whether a suggestion is covered is not stored here; it is
+ * or a blank one. Whether an item is covered is not stored here; it is
  * read from the post text by `withCoverage`.
  */
-export function buildChecklist(
-    data: OnboardingData,
-    customTopics: CustomTopic[] = []
-): ChecklistItem[] {
-    return [
-        ...suggestions(data).map((item) => ({
-            ...item,
-            id: createId(),
-            checked: false
-        })),
-        ...customTopics.map((topic) => ({
-            id: createId(),
-            label: topic.label,
-            checked: topic.checked
-        }))
-    ];
+export function buildChecklist(data: OnboardingData): ChecklistItem[] {
+    return suggestions(data).map((item) => ({
+        ...item,
+        id: createId(),
+        checked: false
+    }));
 }
 
 // Words of four or more letters: drops "in", "on", "the" and the like.
@@ -217,22 +202,15 @@ export function withCoverage(
     const text = body.toLowerCase();
     const words = new Set(significantWords(body));
 
-    return items.map((item) =>
-        item.evidence
-            ? {
-                  ...item,
-                  checked:
-                      // The line is our own template, so only a verbatim
-                      // copy counts: fuzzy-matching its wording would tick
-                      // "Who's writing" for any post saying "updates here".
-                      (item.line !== undefined &&
-                          containsWhole(text, item.line.toLowerCase())) ||
-                      item.evidence.some((phrase) =>
-                          mentions(text, words, phrase)
-                      )
-              }
-            : item
-    );
+    return items.map((item) => ({
+        ...item,
+        checked:
+            // The line is our own template, so only a verbatim copy
+            // counts: fuzzy-matching its wording would tick "Who's
+            // writing" for any post saying "updates here".
+            containsWhole(text, item.line.toLowerCase()) ||
+            item.evidence.some((phrase) => mentions(text, words, phrase))
+    }));
 }
 
 export function appendLine(body: string, line: string): string {

@@ -5,7 +5,6 @@ import { TextInput } from "../components/TextInput";
 import { TextArea } from "../components/TextArea";
 import { Button } from "../components/Button";
 import { PostChecklist } from "../components/PostChecklist";
-import { createId } from "../lib/id";
 import {
     appendLine,
     buildChecklist,
@@ -36,9 +35,7 @@ export function EditorPage({
 
     // One editor for both paths: a chosen draft arrives filled in, "Draft my
     // own post" arrives empty, and nothing else about the page differs.
-    const [items, setItems] = useState(() =>
-        buildChecklist(data, draft.customTopics)
-    );
+    const [items] = useState(() => buildChecklist(data));
 
     const checklist = withCoverage(items, body);
 
@@ -53,44 +50,12 @@ export function EditorPage({
     const current = (): Draft => ({
         ...draft,
         title,
-        body,
-        customTopics: items
-            .filter((item) => !item.evidence)
-            .map(({ label, checked }) => ({ label, checked }))
+        body
     });
 
+    // Picking adds the item's line; the tick follows from the text.
     const pickItem = (picked: ChecklistItem) => {
-        const { line } = picked;
-
-        // A suggestion counts as covered once its line is in the post; a
-        // user-added topic has no line and is ticked by hand.
-        if (line) {
-            setBody((currentBody) => appendLine(currentBody, line));
-        } else {
-            setItems((all) =>
-                all.map((item) =>
-                    item.id === picked.id
-                        ? { ...item, checked: true }
-                        : item
-                )
-            );
-        }
-
-        markChanged();
-    };
-
-    const removeItem = (removed: ChecklistItem) => {
-        setItems((all) =>
-            all.filter((item) => item.id !== removed.id)
-        );
-        markChanged();
-    };
-
-    const addItem = (label: string) => {
-        setItems((all) => [
-            ...all,
-            { id: createId(), label, checked: false }
-        ]);
+        setBody((currentBody) => appendLine(currentBody, picked.line));
         markChanged();
     };
 
@@ -150,8 +115,6 @@ export function EditorPage({
                     <PostChecklist
                         items={checklist}
                         onPick={pickItem}
-                        onRemove={removeItem}
-                        onAdd={addItem}
                     />
                 </div>
 

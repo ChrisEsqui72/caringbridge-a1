@@ -25,6 +25,11 @@ interface Props {
     onDraftOwn: () => void;
 }
 
+type GenerateStatus = "loading" | "ready" | "unavailable";
+
+const UNCHANGED_MESSAGE =
+    "Server unavailable. Your drafts weren't changed. Please try again.";
+
 const isOwnDraft = (draft: Draft) =>
     draft.tone === "custom";
 
@@ -60,33 +65,49 @@ export function DraftsPage({
         (draft) => !isOwnDraft(draft)
     );
 
-    const [loadingInitial, setLoadingInitial] =
-        useState(!hasGenerated);
+    const [status, setStatus] = useState<GenerateStatus>(
+        hasGenerated ? "ready" : "loading"
+    );
+
+    // Bumped by "Try again" to rerun the first generation.
+    const [attempt, setAttempt] = useState(0);
+
+    // A failed regenerate leaves the drafts as they were and says so.
+    const [actionError, setActionError] =
+        useState<string | null>(null);
 
     useEffect(() => {
-        if (!hasGenerated) {
-            setLoadingInitial(true);
+        if (hasGenerated) return;
 
-            generateDrafts(data)
-                .then((generated) =>
-                    setDrafts(withGenerated(generated))
-                )
-                .catch((error) => {
-                    console.error(
-                        "Failed to generate drafts:",
-                        error
-                    );
-                })
-                .finally(() => {
-                    setLoadingInitial(false);
-                });
-        }
-    }, [data, hasGenerated, setDrafts]);
+        // Aborted on cleanup so a superseded request (a retry, or React's
+        // development double-run) can't overwrite the newer one's result.
+        const controller = new AbortController();
+
+        generateDrafts(data, controller.signal)
+            .then((generated) => {
+                setDrafts(withGenerated(generated));
+                setStatus("ready");
+            })
+            .catch((error: unknown) => {
+                if (controller.signal.aborted) return;
+
+                console.error("Failed to generate drafts:", error);
+                setStatus("unavailable");
+            });
+
+        return () => controller.abort();
+    }, [data, hasGenerated, setDrafts, attempt]);
+
+    const retryInitial = () => {
+        setStatus("loading");
+        setAttempt((count) => count + 1);
+    };
 
     async function handleRegenerate(
         draft: Draft
     ) {
         try {
+            setActionError(null);
             setLoadingId(draft.id);
 
             const updated =
@@ -102,6 +123,9 @@ export function DraftsPage({
                         : item
                 )
             );
+        } catch (error) {
+            console.error("Failed to regenerate draft:", error);
+            setActionError(UNCHANGED_MESSAGE);
         } finally {
             setLoadingId(null);
         }
@@ -109,12 +133,16 @@ export function DraftsPage({
 
     async function handleRegenerateAll() {
         try {
+            setActionError(null);
             setLoadingAll(true);
 
             const updated =
                 await generateDrafts(data);
 
             setDrafts(withGenerated(updated));
+        } catch (error) {
+            console.error("Failed to generate drafts:", error);
+            setActionError(UNCHANGED_MESSAGE);
         } finally {
             setLoadingAll(false);
         }
@@ -128,7 +156,31 @@ export function DraftsPage({
                 description="Choose the version that feels most like you, or try another."
             />
 
-            {loadingInitial ? (
+            {status === "unavailable" && (
+                <div className="cb-unavailable" role="alert">
+                    <h2 className="cb-unavailable__title">
+                        Server unavailable
+                    </h2>
+
+                    <p className="cb-unavailable__text">
+                        We couldn't reach the service that writes your
+                        drafts. Your answers are saved. Try again, or
+                        write your own post.
+                    </p>
+
+                    <Button onClick={retryInitial}>
+                        Try again
+                    </Button>
+                </div>
+            )}
+
+            {actionError && (
+                <p className="cb-unavailable__inline" role="alert">
+                    {actionError}
+                </p>
+            )}
+
+            {status === "loading" ? (
                 <div className="py-12 text-center">
                     <p className="text-lg font-medium">
                         Creating your drafts...
@@ -159,19 +211,19 @@ export function DraftsPage({
                 </div>
             )}
 
-            <div className="mt-6 flex justify-center">
-                <Button
-                    variant="secondary"
-                    onClick={handleRegenerateAll}
-                    disabled={
-                        loadingAll || loadingInitial
-                    }
-                >
-                    {loadingAll
-                        ? "Creating new drafts..."
-                        : "Try three new versions"}
-                </Button>
-            </div>
+            {status === "ready" && (
+                <div className="mt-6 flex justify-center">
+                    <Button
+                        variant="secondary"
+                        onClick={handleRegenerateAll}
+                        disabled={loadingAll}
+                    >
+                        {loadingAll
+                            ? "Creating new drafts..."
+                            : "Try three new versions"}
+                    </Button>
+                </div>
+            )}
 
             <div className="mx-auto mt-8 flex w-full max-w-3xl items-center justify-between px-2 sm:px-4">
                 <Button
