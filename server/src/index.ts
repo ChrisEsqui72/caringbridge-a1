@@ -11,9 +11,20 @@ const PORT = Number(process.env.PORT) || 3001;
 
 app.use(
     cors({
-        origin:
-            process.env.CLIENT_URL ??
-            "http://localhost:5173"
+        origin: (origin, callback) => {
+            if (
+                !origin ||
+                origin === "http://localhost:5173" ||
+                origin === "http://127.0.0.1:5173" ||
+                /^http:\/\/172\.\d+\.\d+\.\d+:5173$/.test(origin)
+            ) {
+                callback(null, true);
+            } else if (process.env.CLIENT_URL === origin) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
     })
 );
 app.use(express.json());

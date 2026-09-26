@@ -69,52 +69,122 @@ diagnosis, treatment, dates, places, people, and how anyone feels.
 
 ## Tones
 
-Each tone is a different kind of letter, not the same letter with different
-adjectives. Drafts in different tones should differ in how they open, what
-order they go in, and how they close.
+The three drafts MUST contain the same core information. Do not omit a fact
+merely to make a draft feel different. Differentiation comes from voice,
+organization, emphasis, sentence structure, and length.
 
-### warm-personal: a letter to people who love the patient
-- Open by greeting the readers directly ("Hi everyone,") and saying why
-  you're writing.
-- Tell what has happened as a short story, in the order it happened, the
-  way you'd tell a close friend.
-- Then say what's coming next, and, if any support options were given,
-  how readers can help.
-- Close by thanking people for reading and following along, and say you'll
-  keep posting updates here.
+Each tone should feel like a genuinely different kind of update, not the
+same update with a few adjectives changed.
 
-### clear-informative: a briefing for someone who wants the facts quickly
-- The first sentence gives the main news: who, and the diagnosis or reason
-  for care. Skip the greeting, or keep it to "Hi all,".
-- Then what happens next, in date order. When there are two or more
-  upcoming events, put each on its own line starting with "- " (for example
-  "- Surgery on March 4").
-- Short, direct sentences. No metaphors and no filler.
-- If any support options were given, list them, each on its own line
-  starting with "- ". If a care coordinator is named, say they are the
-  person to go to with offers of help.
-- Close with one sentence saying updates will be posted here.
+### warm-personal: the personal letter
 
-### community-focused: a note to the whole circle about staying connected and helping
-- Open by addressing the group ("Friends and family," or "To everyone who
-  has reached out,") and say this page is where they can keep up.
-- Give the situation in two or three sentences.
-- Most of the update is about how people can help. Name every support
-  option given, each as a specific, friendly invitation rather than a plea
-  (for example "If you'd like to help with meals, ..."). Add no ways to help
-  beyond those given.
-- If a care coordinator is named, say they are the person to go to with
-  offers of help.
-- If no support options were given, write about staying connected instead
-  (following the page, leaving a note) and ask for nothing.
-- Close by thanking people for being part of the patient's circle.
+This should feel like the author personally talking to people they care about.
+
+- Open warmly and directly, such as "Hi everyone," followed by a natural
+explanation of why the author is writing.
+- Tell the story in a conversational, chronological way when possible.
+- Use transitions and slightly fuller sentences to make the update feel
+like a personal letter rather than a list of facts.
+- Give every submitted fact a natural place in the story, even if some
+details receive only one sentence.
+- Mention upcoming events and next steps naturally rather than presenting
+them as a checklist.
+- Include every selected support option, but weave them into the letter as
+friendly invitations rather than making the update feel like a resource list.
+- End with a warm thank-you and a reminder that updates will continue here.
+- This should be the longest and most conversational draft.
+
+### clear-informative: the concise briefing
+
+This should feel like a person quickly bringing friends and family up to date
+on the important facts.
+
+- Start immediately with the main news. A greeting such as "Hi all," is
+optional but should be brief.
+- Present information in a logical order: current situation, diagnosis or
+reason for care, location, next steps, upcoming events, care coordinator,
+and available support.
+- Every submitted fact must still appear. Do not remove information simply
+because it is less central.
+- Use short, direct sentences and compact paragraphs.
+- Upcoming events may be listed individually with "- " when this improves
+readability.
+- Support options may be listed individually with "- " when there are several.
+- Avoid emotional embellishment, metaphors, repetition, and conversational
+filler.
+- End with a short statement that updates will be posted here.
+- This should be the shortest and most efficient draft.
+
+### community-focused: the community invitation
+
+This should feel like an update written for a whole circle of people who want
+to stay connected and know how they can participate.
+
+- Open by addressing the community directly, such as "Friends and family,"
+or "To everyone who has reached out,".
+- Explain the situation briefly, then shift the emphasis toward the
+community: staying connected, following the page, and helping in the specific
+ways the author selected.
+- Every submitted fact must still appear somewhere in the draft. Facts that
+are not central to the community message should be incorporated briefly rather
+than omitted.
+- Make each support option feel like a specific invitation to participate.
+Do not combine distinct support options into a generic "help out" statement.
+- If a care coordinator is named, identify them as the person to contact
+about offers of help.
+- Use more direct second-person language ("If you'd like to...",
+"You can...", "For anyone who wants to...") than the other two tones.
+- Close by thanking the community for staying connected and being part of
+the patient's circle.
+- This should be medium length: longer than the clear-informative draft,
+but shorter than the warm-personal draft.
+
+## Information coverage
+
+Every draft MUST use all meaningful information supplied by the author.
+
+The drafts may differ in how much emphasis they give each fact, but they
+must not differ in which facts they include.
+
+Before writing each draft, mentally create a checklist of all supplied facts,
+including:
+- Patient name
+- Location
+- Diagnosis or reason for care
+- The author's own description
+- What happens next
+- Every upcoming event, including its date and details
+- Care coordinator and relationship, when provided
+- Every selected support option
+
+Every applicable item on this checklist MUST appear in the body.
+
+Do not treat a fact as optional merely because it is less important to the
+selected tone. Tone changes emphasis and presentation, not factual coverage.
+
+Do not invent connecting facts, feelings, motivations, medical details,
+outcomes, or support needs.
 
 ## Length
 
-Match the length to how much the author gave you. A few sparse facts make a
-short update of 60 to 120 words. Detailed input makes a fuller one, up to
-about 300 words. Don't pad a thin update, and don't squeeze a detailed one
-into a summary.
+Length is intentionally different by tone.
+
+ warm-personal: approximately 180–280 words when enough information is
+available. Use the extra space for natural transitions, context, and a
+conversational voice. Do not pad sparse input.
+
+- clear-informative: approximately 100–180 words when enough information is
+available. Compress information into efficient sentences while still
+including every fact.
+
+- community-focused: approximately 140–220 words when enough information is
+available. Give enough space to make each support option feel like a real
+invitation while keeping the overall update focused.
+
+These are targets, not hard limits. Sparse input may produce a shorter draft,
+while unusually detailed input may require a longer draft. Never remove a
+submitted fact just to hit a word count, and never add invented material to
+reach a target.
 
 ## Title
 
@@ -280,9 +350,27 @@ ${describeFacts(data)}
 
 ${describeSupport(data)}
 
+## Coverage requirement
+
+Every meaningful fact above must be represented in the draft.
+
+The three drafts are NOT allowed to omit facts in order to make themselves
+different. All three drafts should communicate the same underlying update.
+
+The drafts should instead differ through:
+- tone
+- organization
+- sentence structure
+- amount of conversational detail
+- emphasis
+- length
+
+The support options above are authoritative. Every selected support option must
+be represented in every draft.
+
 This list is the only source of truth for support. A kind of help that comes
 up in the author's own words is not on this list unless it appears here, and
-must not become the focus of the update.
+must not become a new support option.
 `;
 }
 
@@ -292,8 +380,24 @@ export async function generateDrafts(
     const userPrompt = `${describeRequest(data)}
 ## Request
 
-Write three drafts from these facts, one in each tone: warm-personal,
-clear-informative, and community-focused. Follow each tone's guide.
+Write three drafts from these facts, one in each tone:
+1. warm-personal
+2. clear-informative
+3. community-focused
+
+IMPORTANT: All three drafts must contain the same underlying information.
+Before finalizing each draft, verify that every supplied fact appears in its
+body. Do not omit a fact simply because another tone gives it less emphasis.
+
+The drafts should feel substantially different from one another.
+
+The warm-personal draft should be the longest and most conversational.
+The clear-informative draft should be the shortest and most concise.
+The community-focused draft should fall between the other two and emphasize
+community participation and the selected ways people can help.
+
+Do not achieve differentiation by removing information. Achieve it through
+voice, organization, emphasis, sentence structure, and length.
 
 Respond with JSON in exactly this shape:
 
@@ -344,7 +448,11 @@ Respond with JSON in exactly this shape:
         }
     });
 
+    console.log("Sending draft generation request to Bedrock...");
+
     const response = await client.send(command);
+
+    console.log("Received response from Bedrock");
 
     const responseText =
         response.output?.message?.content?.[0]?.text;
@@ -411,11 +519,23 @@ ${draft.body}
 
 ## Request
 
-The author wants a different ${draft.tone} version of this update. Write a
-new one from the same facts, following the ${draft.tone} guide. Cover the
-same information, but make it genuinely different: a new title, a
-different first sentence, and different phrasing throughout. Do not reuse
-sentences from the previous version.
+The author wants a different ${draft.tone} version of this update.
+
+Create a new version using the SAME complete set of facts from the onboarding
+information. Do not drop or shorten away any submitted information simply to
+make the wording different.
+
+Preserve complete factual coverage while making the writing genuinely
+different through:
+- a new title
+- a different first sentence
+- different organization where appropriate
+- different sentence structure
+- different phrasing throughout
+- stronger adherence to the ${draft.tone} voice
+- the appropriate length for the ${draft.tone} tone
+
+Do not reuse sentences from the previous version.
 
 Respond with JSON in exactly this shape:
 
