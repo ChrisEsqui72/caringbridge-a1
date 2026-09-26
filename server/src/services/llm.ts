@@ -7,10 +7,36 @@ import type {
     Draft,
     DraftTone,
     OnboardingData,
-    PageFor
+    PageFor,
+    SupportNeeds,
 } from "../../../shared/types/index.js";
 
-import { SUPPORT_LABELS } from "../../../shared/types/index.js";
+const SUPPORT_LABELS: Record<
+    "meals" |
+    "rides" |
+    "childcare" |
+    "petCare" |
+    "householdHelp" |
+    "visits" |
+    "flowers" |
+    "gifts" |
+    "thoughtsPrayers" |
+    "fundraising" |
+    "phoneCalls",
+    string
+> = {
+    meals: "Meals",
+    rides: "Rides",
+    childcare: "Childcare",
+    petCare: "Pet care",
+    householdHelp: "Household help",
+    visits: "Visits",
+    flowers: "Flowers",
+    gifts: "Gifts",
+    thoughtsPrayers: "Thoughts & prayers",
+    fundraising: "Fundraising",
+    phoneCalls: "Phone calls"
+};
 
 const client = new BedrockRuntimeClient({
     region: 
