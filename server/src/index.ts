@@ -16,10 +16,10 @@ app.use(
                 !origin ||
                 origin === "http://localhost:5173" ||
                 origin === "http://127.0.0.1:5173" ||
-                /^http:\/\/172\.\d+\.\d+\.\d+:5173$/.test(origin)
+                /^http:\/\/172\.\d+\.\d+\.\d+:5173$/.test(origin) ||
+                origin === "https://main.d1tye3d5rec22w.amplifyapp.com" ||
+                origin === process.env.CLIENT_URL
             ) {
-                callback(null, true);
-            } else if (process.env.CLIENT_URL === origin) {
                 callback(null, true);
             } else {
                 callback(new Error("Not allowed by CORS"));
